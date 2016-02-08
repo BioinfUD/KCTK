@@ -1,0 +1,8 @@
+### Django ###
+*.log
+*.pyc
+*.py~
+*.txt~
+migrations/
+*.py.save
+.pem
