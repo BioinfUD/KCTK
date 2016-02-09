@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
+          <ul class="nav nav-pills nav-stacked span2">
+            <li><a href="/files/upload/">Upload file</a></li>
+            <li><a href="#">Otra opcion</a></li>
+          </ul>
+        </nav>
+    </div>
+    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        <h1>
+            Files list
+        </h1>
+        <div class="list-group">
+            {% for f in file_list %}
+                <div href="#" class="list-group-item glyphicon glyphicon-file">
+                    <span class="" title="Description: {{f.description}}">
+                        {{f.fileUpload.name}}
+                    </span>
+                    <span class="pull-right">
+                        <span class="label label-success glyphicon glyphicon-edit">
+                            <a style="color:white" href="/files/edit/{{f.id}}">
+                            Edit
+                            </a>
+                        </span>
+                        <span class="label label-danger glyphicon glyphicon-remove">
+                            <a style="color:white" href="/files/delete/{{f.id}}">
+                            Delete 
+                            </a>
+                        </span>
+                        
+                    </span>
+                    
+                </div> 
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

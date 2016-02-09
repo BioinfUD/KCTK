@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> 
+    <link type="text/css" rel="stylesheet" href="http://cssmenumaker.com/sites/default/files/css/css_H-XgVgEYMB2xvRxL5664fcqkU41hNSdMZcR6VwoPSMo.css" media="all"> 
+    
+    <title>{% block title %}ExpDiff{% endblock %}</title>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="container-fluid">
+              
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/">ExpDiff</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a class="" href="/my_profile">
+                            <img src="{{STATIC_URL}}avatar/{{user.profile.profile_picture}}" alt="{{user.profile.firstName}} profile picture" width=40px height=40px>
+                        </a>
+                    </li>
+                    <li>
+                    <a href="/profile/">Find People</a></li>
+                {% endif %}
+                {% if not user.is_authenticated %}
+                    <li><a href="/register/">Sign up</a></li>
+                    <li><a href="/login/">Sign in</a></li>
+                {% else %}
+                    <li><a href="/logout/">Logout</a></li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="/profile/edit/">Edit personal data</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/files/">My files</a></li>
+                    <li><a href="/process/">Process list</a></li>
+                  </ul>
+                </li>
+                {% endif %}
+
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+        </div>
+    </div>
+            {% block content %}{% endblock %}
+</div>
+    <!-- Latest compiled and minified JavaScript and JQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</body>
+</html>

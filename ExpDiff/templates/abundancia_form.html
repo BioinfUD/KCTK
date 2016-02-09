@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
+          <ul class="nav nav-pills nav-stacked span2">
+            <li><a href="/abundancia/">Alinear y estimar abundancia</a></li>
+            <li><a href="/ab2matrix/">Abundancias a matriz</a></li>
+            <li><a href="/diffexp/">Expresión Diferencial</a></li>
+          </ul>
+        </nav>
+    </div>
+    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        <h1>
+            Alinear y estimar abundancia
+        </h1><br><br>
+        <div id='pairedform'>
+            <form id='formpaired' action="/run/abundancia/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_reference">Archivo de referencia:</label>
+                    <select class="form-control" id="id_reference" name="reference"  required>
+                        <option value="">seleccione un archivo</option>
+                        {% for f in fastaList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="id_lreads">Archivo de ecturas izquierdas:</label>
+                            <select class="form-control" id="id_lreads" name="lreads" multiple required>
+                                {% for f in fastqList %}
+                                    <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_rreads">Archivo de lecturas derechas:</label>
+                            <select class="form-control" id="id_rreads" name="rreads" multiple required>
+                                {% for f in fastqList %}
+                                    <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type='hidden' name='mapping' id='id_mapping' value='1'>
+                <input type='hidden' name='type' id='id_type' value='2'>
+                <button type="submit" class="btn btn-default">Enviar</button>
+            </form>
+        </div>
+            
+    </div>
+</div>
+{% endblock %}

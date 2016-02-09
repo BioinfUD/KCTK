@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
+          <ul class="nav nav-pills nav-stacked span2">
+            <li><a href="/files/upload/">Subir archivo</a></li>
+            <li><a href="/files/">Mis archivos</a></li>
+          </ul>
+        </nav>
+    </div>
+    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        <h1>
+            Lista de procesos
+        </h1>
+        A continuacion se listan los procesos que ha corrido en el sistema
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Comando</th>
+                <th>Estado</th>
+                <th>Ver </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in process_list %}
+            <tr>
+                <td>{{p.comando|slice:":65"}}</td>
+                <td>{{p.get_estado}}</td>
+                <td> <a href="/process/show/{{p.id}}/">Ver</a>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </div>
+</div>
+
+{% endblock %}

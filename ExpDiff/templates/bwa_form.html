@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
+          <ul class="nav nav-pills nav-stacked span2">
+            <li><a href="/diffexp/">Differential expression</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapping <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="/bowtie/">Bowtie</a></li>
+                <li><a href="/bwa/">BWA</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+    </div>
+    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        <h1>
+            BWA
+        </h1>
+        <br><br>
+        <div class="form-group">
+            <label>Files type:</label><br>
+            <input type="radio" name="filetype" value="single" id='singleradio' checked> Single end<br>
+            <input type="radio" name="filetype" value="paired" id='singleradio' > Paired end<br>
+        </div>
+        <div id='singleform' style='display:block'>
+            <form id='formsingle' action="/mapping/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_reference">Reference file:</label>
+                    <select class="form-control" id="id_reference" name="reference"  required>
+                        <option value="">select a file</option>
+                        {% for f in fastaList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id_reads">Reads file:</label>
+                    <select class="form-control" id="id_reads" name="reads" multiple required>
+                        {% for f in fastqList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <input type='hidden' name='mapping' id='id_mapping' value='1'>
+                <input type='hidden' name='type' id='id_type' value='1'>
+                <button type="submit" class="btn btn-default">Enviar</button>
+            </form>
+        </div>
+        <div id='pairedform' style='display:none'>
+            <form id='formpaired' action="/mapping/" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_reference">Reference file:</label>
+                    <select class="form-control" id="id_reference" name="reference"  required>
+                        <option value="">select a file</option>
+                        {% for f in fastaList %}
+                            <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="id_lreads">Left reads file:</label>
+                            <select class="form-control" id="id_lreads" name="lreads" multiple required>
+                                {% for f in fastqList %}
+                                    <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="id_rreads">Right reads file:</label>
+                            <select class="form-control" id="id_rreads" name="rreads" multiple required>
+                                {% for f in fastqList %}
+                                    <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type='hidden' name='mapping' id='id_mapping' value='1'>
+                <input type='hidden' name='type' id='id_type' value='2'>
+                <button type="submit" class="btn btn-default">Enviar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+var FieldCount=0;
+$("input[name=filetype]:radio").change(function () {
+    if($('#singleradio').is(':checked')) {
+        $('#pairedform').hide();
+        $('#singleform').show();
+    }else{
+        $('#singleform').hide();
+        $('#pairedform').show();
+    }
+    
+});
+</script>
+{% endblock %}

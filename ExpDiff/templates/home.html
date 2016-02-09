@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-3">
+        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
+          <ul class="nav nav-pills nav-stacked span2">
+            <li><a href="/abundancia/">Alinear y estimar abundancia</a></li>
+            <li><a href="/ab2matrix/">Abundancias a matriz</a></li>
+            <li><a href="/diffexp/">Expresión Diferencial</a></li>
+          </ul>
+        </nav>
+    </div>
+    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        <h1>
+            DifExp
+        </h1><br>
+        <p>
+            <div class="row">
+                <div class="col-sm-9" style='text-align:justify'>
+                    DifExp le facilita el proceso de realizar expresión diferencial en un análisis RNA-Seq principalmente a los investigadores no relacionados con el área de informática, brindando una interfaz amigable orientada a la web para el uso de herramientas que solo están disponibles a través de línea de comandos.
+                </div>
+            </div>
+        </p>
+        <br><br>
+    </div>
+</div>
+
+{% endblock %}
