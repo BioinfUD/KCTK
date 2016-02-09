@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- HOME si el usuario está logueado -->
+{% if user.is_authenticated %}
+    <h1>
+        KmerCountersToolKit (KCTK)
+    </h1>
+    <br>
+    <p>
+        <div class="row">
+            <div class="col-sm-9" style='text-align:justify'>
+                <b>Herramientas:</b> En este menú se encuentran todas las herramientas para ejecutar el conteo de kmers. Para utilizarlas, se debe hacer click en el nombre de la herramienta que desea ejecutar, luego llenar el formulario con los parametros de ejecución y finalmente hacer click en el botón llamado "Ejecutar".
+                <hr>
+                <b>Procesos:</b> En este menú se encuentran todos los procesos en ejecución o ya finalizados. Para ver una lista de los procesos haga click en el menú deseado.
+                <hr>
+                <b>Archivos:</b> En este menú se administran los archivos que se van a procesar por la herramientas de conteo. Aquí se podrá subir, eliminar y descargar los archivos deeados.
+            </div>
+        </div>
+    </p>
+    <br><br>
+<!-- HOME si el usuario NO está logueado -->
+{% else %}
+<div class="row" style="text-align:center">
+    <div class="col-sm-12">
+        <h1>
+            KmerCountersToolKit (KCTK)
+        </h1>
+        <br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/io-dJGfCs80?rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+        KmerCountersToolKit (KCTK) es un kit de herramientas para el conteo de kmers. Este kit cuenta con los contadores de kmers desarrollados en los ultimos años y posee una interfaz grafica orientada a la web que le permite al usuario la gestión de archivos, procesos y resultados de una manera rapida e intuitiva.
+    </div>
+    <div class="col-sm-2"></div>
+</div>
+{% endif %}
+
+
+{% endblock %}

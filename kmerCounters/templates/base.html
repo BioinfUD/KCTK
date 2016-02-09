@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" type="text/css" href="http://bioinfud.com/DifExp/bootstrap.min.css"/>
+    <!-- Optional theme -->  
+    
+    <title>{% block title %}KmerCountersToolKit (KCTK){% endblock %}</title>
+        <!-- Latest compiled and minified JavaScript and JQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="container-fluid">
+              
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand" href="/">KCTK</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse  pull-right" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                {% if not user.is_authenticated %}
+                    <li>
+                    <a href="/register/">Registrarse</a>
+                    <ul>
+                        <li>
+                            bla
+                        </li>
+                    </ul>
+                    </li>
+                    <li><a href="/login/">Acceder</a></li>
+                {% else %}
+                    <li><a href="/logout/">Salir</a></li>
+                {% endif %}
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% if user.is_authenticated %}
+        <div class="col-sm-3">
+        <ul class="nav nav-pills nav-stacked">
+            <li ><a href="/">Home</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Herramientas <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">BFCounter</a></li>
+                    <li><a href="#">DSK</a></li>
+                    <li><a href="#">Jellyfish</a></li>
+                    <li><a href="#">KAnalyze</a></li>
+                    <li><a href="#">KHMer</a></li>
+                    <li><a href="#">KMC</a></li> 
+                    <li><a href="#">MSPKmerCounter</a></li>
+                    <li><a href="#">Tallymer</a></li>
+                    <li><a href="#">Turtle</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Procesos <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">En ejecución</a></li>
+                    <li><a href="#">Finalizados</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Archivos</a></li>
+          </ul>
+        </div>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
+        {% endif %}
+            {% block content %}{% endblock %}
+        {% if user.is_authenticated %}
+        </div>
+        {% endif %}
+    </div>        
+    
+    
+</div>
+</body>
+</html>
