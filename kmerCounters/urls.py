@@ -5,6 +5,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('processing.views',
     url(r'^$', 'home', name='home'),
+    url(r'^tools/bfcounter$', 'bfcounter_form'),
     url(r'^abundancia/$', 'abundancia_form'),
     url(r'^ab2matrix/$', 'ab2matrix_form'),
     url(r'^diffexp/$', 'diffexp_form'),

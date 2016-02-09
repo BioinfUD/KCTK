@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1>
+            BFCounter
+        </h1>
+        <p style="text-align: justify;">
+            Método para identificar, contar y almacenar únicamente los kmers que se repiten más de una vez en un dataset de secuencias genómicas. Hace uso de la estructura de datos probabilística llamada “bloom filter” (Bloom, 1970), la cual almacena implícitamente todos los kmers observados con una gran reducción del espacio en memoria (solo se usa un arreglo: la existencia de un kmer se registra alterando algunos bits de dicho arreglo, de acuerdo a la salida de unas funciones hash). Este método cuenta con tres pasos: el primero recorre todos los kmers y utiliza el bloom filter para detectar los kmers vistos más de una vez. El segundo paso se encarga de hacer el conteo de los kmers anteriormente filtrados. Y finalmente el último paso se encarga de limpiar los posibles falsos positivos que pasaron el filtro.
+        </p>
+        <hr>
+        <div class="row" style="text-align:center;">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <form id='form' action="/run/bfcounter/" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_file">Archivo de kmers:</label>
+                        <select class="form-control" id="id_file" name="reference"  required>
+                            <option value="">seleccione un archivo</option>
+                            {% for f in fileList %}
+                                <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                            {% endfor %}
+                        </select><br>
+                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
+                        <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
+                        <label for="id_numKmers" data-toggle="tooltip" title="max: 63">Cantidad estimada de kmers:</label>
+                        <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
+                    </div>
+                    <input type='hidden' name='mapping' id='id_mapping' value='1'>
+                    <input type='hidden' name='type' id='id_type' value='2'>
+                    <button type="submit" class="btn btn-default">Enviar</button>
+                </form>
+            </div>
+            <div class="col-sm-3"></div>
+        </div>
+            
+        </div>
+
+{% endblock %}

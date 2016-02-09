@@ -137,11 +137,11 @@ def home(request):
 
 
 @login_required(login_url='/login/')
-def abundancia_form(request):
+def bfcounter_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    fastaFiles = File.objects.all().filter(profile = profile).filter(ext__in=['fasta','fa'])
-    fastqFiles = File.objects.all().filter(profile = profile).filter(ext__in=['fastq','fq'])
-    return render(request, 'abundancia_form.html', {'fastqList': fastqFiles, 'fastaList': fastaFiles})
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    fastqFiles = File.objects.all().filter(profile = profile)
+    return render(request, 'bfcounter.html', {'fileList': kmerKfiles})
 
 
 @login_required(login_url='/login/')
