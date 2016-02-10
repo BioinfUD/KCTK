@@ -1,33 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-sm-3">
-        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
-          <ul class="nav nav-pills nav-stacked span2">
-            <li><a href="/files/">Mis archivos</a></li>
-            <li><a href="/process/show/">lista de procesos</a></li>
-          </ul>
-        </nav>
+<h1>
+    Subir archivo
+</h1>
+<form action="/files/submit/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_description"><h4>Descripción:</h4></label>
+        <input class="form-control" id="id_description" name="description" type="text">
     </div>
-    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
-        
-        <h1>
-            Subir archivo
-        </h1>
-        <form action="/files/submit/" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_description"><h4>Descripción:</h4></label>
-                    <input class="form-control" id="id_description" name="description" type="text">
-                </div>
-                <div class="form-group">
-                    <label for="id_fileUploaded"><h4>Archivo:</h4></label>
-                    <input class="form-control" id="id_fileUploaded" name="file" type="file">
-                </div>
-                <button type="submit" class="btn btn-default">Subir</button>
-            </form>
-
+    <div class="form-group">
+        <label for="id_fileUploaded"><h4>Archivo:</h4></label>
+        <input class="form-control" id="id_fileUploaded" name="file" type="file">
     </div>
-</div>
-
+    <button type="submit" class="btn btn-default">Subir</button>
+</form>
 {% endblock %}

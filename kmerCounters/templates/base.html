@@ -72,7 +72,15 @@
                     <li><a href="#">Finalizados</a></li>
                 </ul>
             </li>
-            <li><a href="#">Archivos</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Archivos <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/files/upload/">Subir</a></li>
+                    <li><a href="/files/">Lista</a></li>
+                </ul>
+            </li>
           </ul>
         </div>
         {% endif %}
