@@ -19,13 +19,23 @@ POSIBLES_ESTADOS_PROCESOS = (
     (2, "Iniciado"),
     (3, "En espera")
 )
+CONTADORES = (
+    (0, "BFCounter"),
+    (1, "DSK"),
+    (2, "Jellyfish"),
+    (3, "KAnalyze"),
+    (4, "KHMer"),
+    (5, "KMC2"),
+    (6, "MSPKmerCounter"),
+    (7, "Tallymer"),
+    (8, "Turtle"),
+)
+#borrar este diccionario de MApeadores:
 MAPEADORES = (
-    (0, "BWA"),
-    (1, "Bowtie"),
+    (0, "BFCounter"),
 )
 TIPOS_MAPEO = (
-    (0, "Single end"),
-    (1, "Paired end")
+    (0, "BFCounter"),
 )
 
 
@@ -96,6 +106,55 @@ class Proceso(models.Model):
     def __unicode__(self):
         return u"ID: %s Estado: %s \n Comando: %s \n STDOUT: \n %s \n STDERR: %s\n " % (str(self.id), str(self.estado), str(self.comando), str(self.std_out), str(self.std_err))
 
+class BFCounter(models.Model):
+
+    """"
+    Run example
+    type=1 -> Single end
+    type=2 -> Paired end
+    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
+    m.save()
+    """
+    name = models.TextField(default="Experimento")
+    procesos = models.ManyToManyField(Proceso)
+    contador = models.IntegerField(choices=CONTADORES, default=0)
+    profile = models.ForeignKey(Profile)
+    k = models.IntegerField()
+    numKmers = models.BigIntegerField()
+    out_file = models.ForeignKey(File, null=True)
+
+    def run_this(self, file="", k="", numKmers=""):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        tmp_dir = "/tmp/BFCounter%s" % randint(1, 1000000)
+        comando = " /home/nazkter/Develop/KmerCountersToolKit/bin/BFCounter-master/BFCounter count -t %s -k %s -n %s -o %s %s" % (settings.CORES, k, numKmers, tmp_dir,file)
+        #comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl --thread_count %s  --output_dir %s  --transcripts %s --left %s --right %s --seqType fq --est_method RSEM --aln_method bowtie --prep_reference" % (settings.CORES, tmp_dir, reference, " ".join(reads_1), " ".join(reads_2))
+        print "comando: %s" % (comando)
+        p1 = Proceso(comando=str(comando), profile=self.profile)
+        p1.save()
+        self.procesos.add(p1)
+        # To get files with path trin.fileUpload.path
+        # Genero indice y espero hasta que este listo
+        t1 = threading.Thread(target=p1.run_process)
+        t1.setDaemon(True)
+        t1.start()
+        while t1.isAlive():
+            sleep(1)
+        file_name = "%s" % tmp_dir
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
+        out_file.save()
+        self.out_file = out_file
+
+    def run(self, file="", k="", numKmers=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, numKmers=numKmers))
+        t.setDaemon(True)
+        t.start()
+
+    class Meta:
+        verbose_name_plural = "Procesos de alinear y estimar abundancia"
+
+    def __unicode__(self):
+        return u"Alineamiento y estimación \n %s" % self.name
 
 class Align_and_estimate_abundance(models.Model):
 

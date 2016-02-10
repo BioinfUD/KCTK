@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
         <h1>
-            BFCounter
+            MSPKmerCounter
         </h1>
         <p style="text-align: justify;">
-            Método para identificar, contar y almacenar únicamente los kmers que se repiten más de una vez en un dataset de secuencias genómicas. Hace uso de la estructura de datos probabilística llamada “bloom filter” (Bloom, 1970), la cual almacena implícitamente todos los kmers observados con una gran reducción del espacio en memoria (solo se usa un arreglo: la existencia de un kmer se registra alterando algunos bits de dicho arreglo, de acuerdo a la salida de unas funciones hash). Este método cuenta con tres pasos: el primero recorre todos los kmers y utiliza el bloom filter para detectar los kmers vistos más de una vez. El segundo paso se encarga de hacer el conteo de los kmers anteriormente filtrados. Y finalmente el último paso se encarga de limpiar los posibles falsos positivos que pasaron el filtro.
+            Descripción.....
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </p>
         <hr>
         <div class="row" style="text-align:center;">
@@ -14,7 +15,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="id_file">Archivo de kmers:</label>
-                        <select class="form-control" id="id_file" name="file"  required>
+                        <select class="form-control" id="id_file" name="reference"  required>
                             <option value="">seleccione un archivo</option>
                             {% for f in fileList %}
                                 <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
@@ -26,7 +27,7 @@
                         <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
                     </div>
                     <input type='hidden' name='mapping' id='id_mapping' value='1'>
-                    <!--<input type='hidden' name='type' id='id_type' value='2'>-->
+                    <input type='hidden' name='type' id='id_type' value='2'>
                     <button type="submit" class="btn btn-default">Enviar</button>
                 </form>
             </div>

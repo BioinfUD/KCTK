@@ -140,23 +140,55 @@ def home(request):
 def bfcounter_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
     kmerKfiles = File.objects.all().filter(profile = profile)
-    fastqFiles = File.objects.all().filter(profile = profile)
     return render(request, 'bfcounter.html', {'fileList': kmerKfiles})
 
+@login_required(login_url='/login/')
+def dsk_form(request):
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'dsk.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
-def ab2matrix_form(request):
+def jellyfish_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    resultFiles = File.objects.all().filter(profile = profile).filter(ext='results')
-    return render(request, 'ab2matrix_form.html', {'resultList': resultFiles})
-
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'jellyfish.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
-def diffexp_form(request):
+def kanalyze_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    matrixFiles = File.objects.all().filter(profile = profile).filter(ext='matrix')
-    return render(request, 'diffexp_form.html', {'matrixList': matrixFiles})
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'kanalyze.html', {'fileList': kmerKfiles})
 
+@login_required(login_url='/login/')
+def khmer_form(request):
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'khmer.html', {'fileList': kmerKfiles})
+
+@login_required(login_url='/login/')
+def kmc2_form(request):
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'kmc2.html', {'fileList': kmerKfiles})
+
+@login_required(login_url='/login/')
+def mspkmercounter_form(request):
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'mspkmercounter.html', {'fileList': kmerKfiles})
+
+@login_required(login_url='/login/')
+def tallymer_form(request):
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'tallymer.html', {'fileList': kmerKfiles})
+
+@login_required(login_url='/login/')
+def turtle_form(request):
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmerKfiles = File.objects.all().filter(profile = profile)
+    return render(request, 'turtle.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def upload_success(request):
@@ -207,29 +239,18 @@ def download_file(request, id_file):
 
 
 @login_required(login_url='/login/')
-def run_abundancia(request):
+def run_bfcounter(request):
     #REFERENCE FILE PATH
-    reference_id = request.POST.get('reference', '')
-    reference_path = File.objects.get(id=int(reference_id)).fileUpload.path
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
     #CONFIG
-    type_id = request.POST.get('type', '')
-    mapping_id = request.POST.get('mapping', '')
+    k = request.POST.get('k', '')
+    numKmers = request.POST.get('numKmers', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
+    bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
+    bf.save()
 
-    reads_1 = []
-    reads_2 = []
-    #RIGHT READS FILE PATH
-    rreads_id = request.POST.getlist('rreads', '')
-    for rr in rreads_id:
-        reads_1.append(File.objects.get(id=int(rr)).fileUpload.path)
-    #LEFT READS FILE PATH
-    lreads_id = request.POST.getlist('lreads', '')
-    for lr in lreads_id:
-        reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
-    ab = Align_and_estimate_abundance(mapeador=1, tipo=1, profile=profile)
-    ab.save()
-
-    ab.run(reference=reference_path, reads_1=reads_1, reads_2=reads_2)
+    bf.run(file=file_path, k=k, numKmers=numKmers)
     #Falta el response
     success = 'El proceso se ha puesto en la cola de espera.'
     return render(request, 'success.html', {'success': success})
