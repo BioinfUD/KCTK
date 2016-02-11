@@ -77,7 +77,7 @@ def filesubmit(request):
         user = User.objects.select_related().get(id=request.user.pk)
         p = user.profile
         ext = str(request.FILES['file']).split(".")[-1]
-        instance = File(fileUpload=request.FILES['file'], description=desc, profile=p,ext=ext)
+        instance = File(fileUpload=request.FILES['file'], description=desc, profile=p,ext=ext,tipo=1)
         instance.save()
         success = 'El archivo se ha guardado satisfactoriamente.'
         return render(request, 'success.html',{'success': success})
@@ -200,7 +200,7 @@ def upload_success(request):
 def show_files(request):
     user = User.objects.select_related().get(id=request.user.pk)
     profile = user.profile
-    file_list = File.objects.all().filter(profile = profile)
+    file_list = File.objects.all().filter(profile = profile).filter(tipo = 1)
     return render(request, 'files.html', {'file_list': file_list})
 
 
