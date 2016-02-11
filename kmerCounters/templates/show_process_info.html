@@ -1,33 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    <div class="col-sm-3">
-        <nav style="border-radius: 5px; border: solid rgb(161, 161, 161) 2px;">
-          <ul class="nav nav-pills nav-stacked span2">
-            <li><a href="/files/upload/">Subir archivo</a></li>
-            <li><a href="/files/">Mis archivos</a></li>
-            <li><a href="/process/show/">Lista de procesos</a></li> 
-          </ul>
-        </nav>
-    </div>
-    <div class="col-sm-9" style="border-left: solid rgb(80, 121, 150) 1px;">
-        <h3>
-            Comando:
-        </h3>
-           <pre> {{p.comando}} </pre>
-        <h3> 
-            Estado:
-        </h3>
-            <pre> {{p.get_estado}}</pre>
-        <h3> 
-            Standard Error
-        </h3>
-            <pre> {{p.std_err}} </pre>
-        <h3> 
-            Standard Output
-        </h3>
-           <pre>  {{p.std_out}}</pre>
-    </div>
-</div>
+<h3>
+    Comando:
+</h3>
+   <pre> {{p.comando}} </pre>
+<h3> 
+    Estado:
+</h3>
+    <pre> {{p.get_estado}}</pre>
+<h3> 
+    Resultado:
+</h3>
+    <pre> {{p.get_resultado}}</pre>
+<h3> 
+    Standard Error
+</h3>
+    <pre> {{p.std_err}} </pre>
+<h3> 
+    Standard Output
+</h3>
+   <pre>  {{p.std_out}}</pre>
 
 {% endblock %}

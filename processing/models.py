@@ -67,6 +67,10 @@ class File(models.Model):
     class Meta:
         verbose_name_plural = 'Archivos'
 
+    def get_contenido(self):
+        # falta/pendiente cambiar direccion
+        return Django_File(open("/home/nazkter/Develop/KmerCountersToolKit%s"%(self.fileUpload.url))).read()
+        
     def __unicode__(self):
         return u"ARCHIVO \n Location: %s \n Description: %s " % (self.fileUpload.path, self.description)
 
@@ -81,12 +85,16 @@ class Proceso(models.Model):
     contador = models.TextField(default="")
     inicio = models.DateTimeField(auto_now_add=True)
     fin = models.DateTimeField(null=True)
+    resultado = models.ForeignKey(File, null=True)
 
     class Meta:
         verbose_name_plural = 'Procesos'
 
     def get_estado(self):
         return POSIBLES_ESTADOS_PROCESOS[self.estado][1]
+
+    def get_resultado(self):
+        return self.resultado.get_contenido()
 
     def run_process(self):
         self.estado = 2
@@ -155,6 +163,8 @@ class BFCounter(models.Model):
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file
+        p1.resultado = out_file
+        p1.save()
 
     def run(self, file="", k="", numKmers=""):
         t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, numKmers=numKmers))
