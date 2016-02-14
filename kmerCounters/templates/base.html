@@ -4,26 +4,21 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" type="text/css" href="http://bioinfud.com/DifExp/bootstrap.min.css"/>
     <!-- Optional theme -->  
-    
     <title>{% block title %}KmerCountersToolKit (KCTK){% endblock %}</title>
         <!-- Latest compiled and minified JavaScript and JQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
-
 <body>
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
         <nav class="navbar navbar-default" role="navigation">
           <div class="container-fluid">
-              
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
               <a class="navbar-brand" href="/">KCTK</a>
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse  pull-right" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
@@ -41,17 +36,18 @@
         </nav>
         </div>
     </div>
-    
     <div class="row">
         {% if user.is_authenticated %}
         <div class="col-sm-3">
         <ul class="nav nav-pills nav-stacked">
             <li ><a href="/">Home</a></li>
-            <li class="dropdown">
+            <li ><a href="/process/show/">Procesos</a></li>
+            <li ><a href="/files/">Archivos</a></li>
+            <li class="dropdown open">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                     Herramientas <span class="caret"></span>
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" style="min-width: 100%;">
                     <li><a href="/tools/bfcounter">BFCounter</a></li>
                     <li><a href="/tools/dsk">DSK</a></li>
                     <li><a href="/tools/jellyfish">Jellyfish</a></li>
@@ -61,24 +57,6 @@
                     <li><a href="/tools/mspkmercounter">MSPKmerCounter</a></li>
                     <li><a href="/tools/tallymer">Tallymer</a></li>
                     <li><a href="/tools/turtle">Turtle</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    Procesos <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">En ejecución</a></li>
-                    <li><a href="/process/show/">Finalizados</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    Archivos <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/files/upload/">Subir</a></li>
-                    <li><a href="/files/">Lista</a></li>
                 </ul>
             </li>
           </ul>
@@ -92,8 +70,6 @@
         </div>
         {% endif %}
     </div>        
-    
-    
 </div>
 </body>
 </html>

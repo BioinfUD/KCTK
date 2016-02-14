@@ -17,7 +17,13 @@ A continuacion se listan los procesos que ha corrido en el sistema
 </thead>
 <tbody>
     {% for p in process_list %}
-    <tr>
+    <tr
+        {% if "Terminado exitosamente" == p.get_estado %}
+            style="background-color: #1E611E;"
+        {% elif "Terminado con errores" == p.get_estado %}
+            style="background-color: #6B2223;"
+        {% endif %}
+    >
         <td>{{p.pk}}</td>
         <td>{{p.contador}}</td>
         <td>{{p.get_estado}}</td>

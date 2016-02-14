@@ -78,14 +78,14 @@ class File(models.Model):
 class Proceso(models.Model):
 
     estado = models.IntegerField(choices=POSIBLES_ESTADOS_PROCESOS, default=3)
-    std_err = models.TextField(default="")
-    std_out = models.TextField(default="")
+    std_err = models.TextField(default="None")
+    std_out = models.TextField(default="None")
     comando = models.CharField(max_length=2000, default="echo Hola mundo")
     profile = models.ForeignKey(Profile)
     contador = models.TextField(default="")
     inicio = models.DateTimeField(auto_now_add=True)
     fin = models.DateTimeField(null=True)
-    resultado = models.ForeignKey(File, null=True)
+    resultado = models.ForeignKey(File, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Procesos'
@@ -103,6 +103,7 @@ class Proceso(models.Model):
             p = subprocess.Popen(str(self.comando), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
             self.std_out, self.std_err = p.communicate()
             self.estado = p.returncode
+            print p.returncode
             self.fin = datetime.datetime.now()
         except:
             try:
@@ -125,6 +126,7 @@ class Proceso(models.Model):
     def __unicode__(self):
         return u"ID: %s Estado: %s \n Comando: %s \n STDOUT: \n %s \n STDERR: %s\n " % (str(self.id), str(self.estado), str(self.comando), str(self.std_out), str(self.std_err))
 
+
 class BFCounter(models.Model):
 
     """"
@@ -146,7 +148,9 @@ class BFCounter(models.Model):
         self.name = "Experimento %s" % self.id
         self.save()
         tmp_dir = "/tmp/BFCounter%s" % randint(1, 1000000)
-        comando = " /home/nazkter/Develop/KmerCountersToolKit/bin/BFCounter-master/BFCounter count -t %s -k %s -n %s -o %s %s" % (settings.CORES, k, numKmers, tmp_dir,file)
+        comando_part1 = " BFCounter count -t %s -k %s -n %s -o %s %s" % (settings.CORES, k, numKmers, tmp_dir,file)
+        comando_part2 = "BFCounter dump -k %s -i %s -o %s_dump" % (k, tmp_dir, tmp_dir)
+        comando = "%s && %s" % (comando_part1, comando_part2) 
         #comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl --thread_count %s  --output_dir %s  --transcripts %s --left %s --right %s --seqType fq --est_method RSEM --aln_method bowtie --prep_reference" % (settings.CORES, tmp_dir, reference, " ".join(reads_1), " ".join(reads_2))
         print "comando: %s" % (comando)
         p1 = Proceso(comando=str(comando), profile=self.profile, contador="BFCounter")
@@ -159,7 +163,7 @@ class BFCounter(models.Model):
         t1.start()
         while t1.isAlive():
             sleep(1)
-        file_name = "%s" % tmp_dir
+        file_name = "%s_dump" % tmp_dir
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file

@@ -38,8 +38,10 @@ def log_in(request):
 
 def log_out(request):
     logout(request)
-    success = 'Ha cerrado sesión satisfactoriamente.'
-    return render(request, 'success.html',{'success': success})
+    success = 'Ha cerrado sesión satisfactoriamente. Si desdea acceder de nuevo haga clic en el siguiente botón:'
+    url_continuar = '/login'
+    msg_continuar = 'Acceder a la cuenta'
+    return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
 
 #  ############ REGISTRATION ###############
@@ -59,7 +61,9 @@ def register_user(request):
                                   )
             new_profile.save()
             success = 'Se ha registrado satisfactoriamente.'
-            return render(request, 'success.html',{'success': success})
+            url_continuar = '/login'
+            msg_continuar = 'Acceder a la cuenta'
+            return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
         else:
             error = 'Las contrasenas no son iguales'
             return render(request, 'error.html', {'error': error})
@@ -80,7 +84,9 @@ def filesubmit(request):
         instance = File(fileUpload=request.FILES['file'], description=desc, profile=p,ext=ext,tipo=1)
         instance.save()
         success = 'El archivo se ha guardado satisfactoriamente.'
-        return render(request, 'success.html',{'success': success})
+        url_continuar = '/files'
+        msg_continuar = 'Ver lista de archivos'
+        return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
         #  except Exception as e:
         #    print e
     else:
@@ -95,7 +101,9 @@ def delete_file(request, fileID):
         if file2del.profile == profile:
             file2del.delete()
             success = 'Se ha eliminado el archivo satisfactoriamente.'
-            return render(request, 'success.html',{'success': success})
+            url_continuar = '/files'
+            msg_continuar = 'Ver lista de archivos'
+            return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
         else:
             error = 'Este archivo no le pertenece'
             return render(request, 'error.html', {'error':error})
@@ -125,7 +133,9 @@ def editfile(request):
         instance.description = desc
         instance.save()
         success = 'Se ha editado el archivo satisfactoriamente.'
-        return render(request, 'success.html',{'success': success})
+        url_continuar = '/files'
+        msg_continuar = 'Ver lista de archivos'
+        return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
     except Exception, e:
         error = 'No se pudieron guardar los datos'
         return render(request, 'error.html', {'error':error})
@@ -252,8 +262,10 @@ def run_bfcounter(request):
 
     bf.run(file=file_path, k=k, numKmers=numKmers)
     #Falta el response
-    success = 'El proceso se ha puesto en la cola de espera.'
-    return render(request, 'success.html', {'success': success})
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
 
 @login_required(login_url='/login/')

@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>
-    Lista de archivos
-</h1><br><br>
+<div class="row">
+    <div class="col-sm-10"><h1>Lista de archivos</h1></div>
+    <div class="col-sm-2"><br><br><a href="/files/upload/"><span class="label label-success">+ Nuevo archivo</span></a></div>
+</div>
+<br><br>
 <div class="list-group">
     {% for f in file_list %}
         <div href="#" class="list-group-item glyphicon glyphicon-file">
@@ -25,9 +27,7 @@
                     Descargar 
                     </a>
                 </span>
-                
             </span>
-            
         </div> 
     {% endfor %}
 </div>
