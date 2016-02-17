@@ -148,7 +148,7 @@ class BFCounter(models.Model):
         self.name = "Experimento %s" % self.id
         self.save()
         tmp_dir = "/tmp/BFCounter%s" % randint(1, 1000000)
-        comando_part1 = " BFCounter count -t %s -k %s -n %s -o %s %s" % (settings.CORES, k, numKmers, tmp_dir,file)
+        comando_part1 = "BFCounter count -t %s -k %s -n %s -o %s %s" % (settings.CORES, k, numKmers, tmp_dir,file)
         comando_part2 = "BFCounter dump -k %s -i %s -o %s_dump" % (k, tmp_dir, tmp_dir)
         comando = "%s && %s" % (comando_part1, comando_part2) 
         #comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl --thread_count %s  --output_dir %s  --transcripts %s --left %s --right %s --seqType fq --est_method RSEM --aln_method bowtie --prep_reference" % (settings.CORES, tmp_dir, reference, " ".join(reads_1), " ".join(reads_2))
@@ -227,6 +227,63 @@ class DSK(models.Model):
 
     def run(self, file="", k="", minAb="", maxAb=""):
         t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, minAb=minAb, maxAb=maxAb))
+        t.setDaemon(True)
+        t.start()
+
+    class Meta:
+        verbose_name_plural = "Procesos de alinear y estimar abundancia"
+
+    def __unicode__(self):
+        return u"Alineamiento y estimación \n %s" % self.name
+
+class DSK(models.Model):
+
+    """"
+    Run example
+    type=1 -> Single end
+    type=2 -> Paired end
+    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
+    m.save()
+    """
+    name = models.TextField(default="Experimento")
+    procesos = models.ManyToManyField(Proceso)
+    contador = models.IntegerField(choices=CONTADORES, default=0)
+    profile = models.ForeignKey(Profile)
+    k = models.IntegerField()
+    minAb = models.BigIntegerField()
+    maxAb = models.BigIntegerField()
+    canonical = models.BooleanField(default=True)
+    out_file = models.ForeignKey(File, null=True)
+
+    def run_this(self, file="", k="", minAb="", maxAb="", canonical=""):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        tmp_dir = "/tmp/Jellyfish%s" % randint(1, 1000000)
+        # Pendiente: Crear el comando y ejecutar pruebas
+        comando_part1 = "dsk -nb-cores %s -kmer-size %s -abundance-min %s -abundance-max %s -file %s -out /tmp/%s" % (settings.CORES, k, minAb, maxAb, file, tmp_dir)
+        comando_part2 = "dsk2ascii -file /tmp/%s.h5 -out /tmp/%s_final" % (tmp_dir, tmp_dir)
+        comando = "%s && %s" % (comando_part1, comando_part2) 
+        #comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl --thread_count %s  --output_dir %s  --transcripts %s --left %s --right %s --seqType fq --est_method RSEM --aln_method bowtie --prep_reference" % (settings.CORES, tmp_dir, reference, " ".join(reads_1), " ".join(reads_2))
+        print "comando: %s" % (comando)
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="DSK")
+        p1.save()
+        self.procesos.add(p1)
+        # To get files with path trin.fileUpload.path
+        # Genero indice y espero hasta que este listo
+        t1 = threading.Thread(target=p1.run_process)
+        t1.setDaemon(True)
+        t1.start()
+        while t1.isAlive():
+            sleep(1)
+        file_name = "/tmp/%s_final" % tmp_dir
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
+        out_file.save()
+        self.out_file = out_file
+        p1.resultado = out_file
+        p1.save()
+
+    def run(self, file="", k="", minAb="", maxAb=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, minAb=minAb, maxAb=maxAb, canonical=""))
         t.setDaemon(True)
         t.start()
 

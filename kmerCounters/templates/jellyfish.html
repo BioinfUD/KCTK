@@ -1,39 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-        <h1>
-            Jellyfish
-        </h1>
-        <p style="text-align: justify;">
-            Descripción.....
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <hr>
-        <div class="row" style="text-align:center;">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <form id='form' action="/run/bfcounter/" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="id_file">Archivo de kmers:</label>
-                        <select class="form-control" id="id_file" name="reference"  required>
-                            <option value="">seleccione un archivo</option>
-                            {% for f in fileList %}
-                                <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
-                            {% endfor %}
-                        </select><br>
-                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
-                        <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
-                        <label for="id_numKmers" data-toggle="tooltip" title="max: 63">Cantidad estimada de kmers:</label>
-                        <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
-                    </div>
-                    <input type='hidden' name='mapping' id='id_mapping' value='1'>
-                    <input type='hidden' name='type' id='id_type' value='2'>
-                    <button type="submit" class="btn btn-default">Enviar</button>
-                </form>
+<h1>
+    Jellyfish
+</h1>
+<p style="text-align: justify;">
+    Este método hace uso de una tabla hash y un enfoque lock-free, lo cual permite el acceso y actualización de la tabla por varios hilos al mismo tiempo, con una técnica llamada lock free-queues basada en la operación compare-and-swap (CAS). El algoritmo se divide en dos pasos: el primero se encarga de buscar el kmer y obtener su llave (si ya ha sido insertado) o insertar el kmer en la tabla hash con una estrategia de reprobado si no existe previamente; en caso de que se genere una colisión, el algoritmo vuelve a intentar insertar el kmer una cantidad de veces indicada por max_reprobe. El segundo paso se encarga de aumentar la cuenta del kmer, igualmente con una operación CAS.
+</p>
+<a href="https://github.com/gmarcais/Jellyfish" target="_blank">Código Fuente</a>
+<hr>
+<div class="row" style="text-align:center;">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <form id='form' action="/run/bfcounter/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_file">Archivo de kmers:</label>
+                <select class="form-control" id="id_file" name="reference"  required>
+                    <option value="">seleccione un archivo</option>
+                    {% for f in fileList %}
+                        <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
+                <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
+                <label for="id_numKmers" data-toggle="tooltip" title="max: 63">Cantidad estimada de kmers:</label>
+                <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
             </div>
-            <div class="col-sm-3"></div>
-        </div>
-            
-        </div>
-
+            <input type='hidden' name='mapping' id='id_mapping' value='1'>
+            <input type='hidden' name='type' id='id_type' value='2'>
+            <button type="submit" class="btn btn-default">Enviar</button>
+        </form>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
 {% endblock %}

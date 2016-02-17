@@ -6,6 +6,7 @@
         <p style="text-align: justify;">
             Método para conteo de kmers que optimiza el uso de la memoria RAM por medio de la partición de lecturas en conjuntos pequeños los cuales son guardados en disco y cargados a memoria en pequeñas cantidades. Este algoritmo se divide en 3 pasos: el primero calcula el número de kmers, el número de iteraciones para recorrer los kmers y el número de particiones para guardar en disco. En el segundo paso se recorren todos los kmers y por medio de una función hash se distribuye una parte de los kmers en las particiones. El tercer paso consiste en cargar en una tabla hash los kmers de cada partición e irlos contando, ocupando en memoria únicamente una partición a la vez. Finalmente se repiten los 3 pasos hasta que se hayan insertado todos los kmers.
         </p>
+        <a href="http://minia.genouest.org/dsk/" target="_blank">Código Fuente</a>
         <hr>
         <div class="row" style="text-align:center;">
             <div class="col-sm-3"></div>

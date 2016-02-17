@@ -6,6 +6,7 @@
         <p style="text-align: justify;">
             Método para identificar, contar y almacenar únicamente los kmers que se repiten más de una vez en un dataset de secuencias genómicas. Hace uso de la estructura de datos probabilística llamada “bloom filter” (Bloom, 1970), la cual almacena implícitamente todos los kmers observados con una gran reducción del espacio en memoria (solo se usa un arreglo: la existencia de un kmer se registra alterando algunos bits de dicho arreglo, de acuerdo a la salida de unas funciones hash). Este método cuenta con tres pasos: el primero recorre todos los kmers y utiliza el bloom filter para detectar los kmers vistos más de una vez. El segundo paso se encarga de hacer el conteo de los kmers anteriormente filtrados. Y finalmente el último paso se encarga de limpiar los posibles falsos positivos que pasaron el filtro.
         </p>
+        <a href="https://github.com/pmelsted/BFCounter" target="_blank">Código Fuente</a>
         <hr>
         <div class="row" style="text-align:center;">
             <div class="col-sm-3"></div>

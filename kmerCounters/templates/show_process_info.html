@@ -1,13 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
 <h3>Comando:</h3>
-   <pre>{{p.comando}} </pre>
-<h3>Estado:</h3>
-    <pre> {{p.get_estado}}</pre>
-<h3>Resultado:</h3>
-    <pre style="overflow-y: scroll;max-height: 300px;">{{p.get_resultado}}</pre>
-<h3>Standard Error</h3>
-    <pre> {{p.std_err}} </pre>
-<h3>Standard Output</h3>
-   <pre>  {{p.std_out}}</pre>
+<pre>{{p.comando}}</pre>
+<hr>
+	<h2>Resultados</h2>
+	<ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#resultado">Resultados</a></li>
+		<li><a data-toggle="tab" href="#errores">Standar Error</a></li>
+		<li><a data-toggle="tab" href="#salida">Standar Output</a></li>
+		<li><a data-toggle="tab" href="#grafica">Graph </a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="resultado" class="tab-pane fade in active">
+			<div class="row">
+			    <div class="col-sm-10"><h3>Resultado</h3></div>
+			    <div class="col-sm-2">
+			    	<br>
+			    	<a href="/files/upload/">
+			    		<span class="label label-success">Descargar archivo</span>
+			    	</a>
+			    </div>
+			</div>
+			<pre style="overflow-y: scroll;max-height: 300px;">{{p.get_resultado}}</pre>
+		</div>
+		<div id="errores" class="tab-pane fade">
+			<h3>Errores y advertencias</h3>
+    		<pre>{% if "" == p.std_err %}El comando no devolvió errores o advertencias
+    		{% else %}
+    			{{p.std_err}}
+    		{% endif %}</pre>
+		</div>
+		<div id="salida" class="tab-pane fade">
+			<h3>Salida del comando</h3>
+    		<pre>{% if "" == p.std_out %}El comando no devolvió mensajes
+    		{% else %}
+    			{{p.std_out}}
+    		{% endif %}</pre>
+		</div>
+		<div id="grafica" class="tab-pane fade">
+			<h3>HighCharts / PyCharts / Plotly</h3>
+			<p>Espacio reservado para una super grafica</p>
+		</div>
+	</div>
 {% endblock %}

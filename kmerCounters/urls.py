@@ -36,6 +36,7 @@ urlpatterns = patterns('processing.views',
     # Tools execution
     url(r'^run/bfcounter/$', 'run_bfcounter'),
     url(r'^run/dsk/$', 'run_dsk'),
+    url(r'^run/jellyfish/$', 'run_jellyfish'),
     # Admin admin
     url(r'^admin/', include(admin.site.urls)),
 )
