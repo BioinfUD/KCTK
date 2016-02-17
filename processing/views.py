@@ -149,55 +149,55 @@ def home(request):
 @login_required(login_url='/login/')
 def bfcounter_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'bfcounter.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def dsk_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'dsk.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def jellyfish_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'jellyfish.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def kanalyze_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'kanalyze.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def khmer_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'khmer.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def kmc2_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'kmc2.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def mspkmercounter_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'mspkmercounter.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def tallymer_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'tallymer.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
 def turtle_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile)
+    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
     return render(request, 'turtle.html', {'fileList': kmerKfiles})
 
 @login_required(login_url='/login/')
@@ -261,6 +261,28 @@ def run_bfcounter(request):
     bf.save()
 
     bf.run(file=file_path, k=k, numKmers=numKmers)
+    #Falta el response
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+
+@login_required(login_url='/login/')
+def run_dsk(request):
+    #REFERENCE FILE PATH
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
+    #CONFIG
+    k = request.POST.get('k', '')
+    minAb = request.POST.get('minAb', '')
+    maxAb = request.POST.get('maxAb', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    dsk = DSK(contador=1, k=k, minAb=minAb, maxAb=maxAb, profile=profile)
+    dsk.save()
+    #bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
+    #bf.save()
+
+    dsk.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb)
     #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'

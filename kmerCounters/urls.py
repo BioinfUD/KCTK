@@ -35,6 +35,7 @@ urlpatterns = patterns('processing.views',
     url(r'^editfile/$', 'editfile'),
     # Tools execution
     url(r'^run/bfcounter/$', 'run_bfcounter'),
+    url(r'^run/dsk/$', 'run_dsk'),
     # Admin admin
     url(r'^admin/', include(admin.site.urls)),
 )

@@ -1,25 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h3>
-    Comando:
-</h3>
-   <pre> {{p.comando}} </pre>
-<h3> 
-    Estado:
-</h3>
+<h3>Comando:</h3>
+   <pre>{{p.comando}} </pre>
+<h3>Estado:</h3>
     <pre> {{p.get_estado}}</pre>
-<h3> 
-    Resultado:
-</h3>
-    <pre style="overflow-y: scroll;max-height: 300px;">{{p.get_resultado}}
-    </pre>
-<h3> 
-    Standard Error
-</h3>
+<h3>Resultado:</h3>
+    <pre style="overflow-y: scroll;max-height: 300px;">{{p.get_resultado}}</pre>
+<h3>Standard Error</h3>
     <pre> {{p.std_err}} </pre>
-<h3> 
-    Standard Output
-</h3>
+<h3>Standard Output</h3>
    <pre>  {{p.std_out}}</pre>
-
 {% endblock %}
