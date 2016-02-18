@@ -289,6 +289,7 @@ def run_dsk(request):
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+@login_required(login_url='/login/')
 def run_jellyfish(request):
     #REFERENCE FILE PATH
     file_id = request.POST.get('file', '')
@@ -299,12 +300,34 @@ def run_jellyfish(request):
     maxAb = request.POST.get('maxAb', '')
     canonical = request.POST.get('canonical', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    jfish = Jellyfish(contador=1, k=k, minAb=minAb, maxAb=maxAb, canonical=canonical, profile=profile)
+    jfish = Jellyfish(contador=1, m=m, minAb=minAb, maxAb=maxAb, canonical=canonical, profile=profile)
     jfish.save()
     #bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
     #bf.save()
 
     jfish.run(file=file_path, m=m, minAb=minAb, maxAb=maxAb, canonical=canonical)
+    #Falta el response
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+
+@login_required(login_url='/login/')
+def run_kanalyze(request):
+    #REFERENCE FILE PATH
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
+    #CONFIG
+    k = request.POST.get('k', '')
+    formato = request.POST.get('formato', '')
+    reverse = request.POST.get('reverse', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    klyze = KAnalyze(contador=1, k=k, formato=formato, reverse=reverse, profile=profile)
+    klyze.save()
+    #bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
+    #bf.save()
+
+    klyze.run(file=file_path, k=k, formato=formato, reverse=reverse)
     #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'

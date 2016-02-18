@@ -35,6 +35,18 @@ TIPO = (
     (0, "output"),
     (1, "input"),
 )
+REVERSE = (
+    (0, "duplicate"),
+    (1, "single"),
+    (1, "canonical"),
+)
+FORMATO = (
+    (0, "raw"),
+    (1, "fasta"),
+    (2, "fastq"),
+    (3, "fastagz"),
+    (4, "fastqgz"),
+)
 #borrar este diccionario de MApeadores:
 MAPEADORES = (
     (0, "BFCounter"),
@@ -42,7 +54,6 @@ MAPEADORES = (
 TIPOS_MAPEO = (
     (0, "BFCounter"),
 )
-
 
 class Profile(models.Model):
     user = models.OneToOneField(User)
@@ -124,7 +135,7 @@ class Proceso(models.Model):
         t.start()
 
     def __unicode__(self):
-        return u"ID: %s Estado: %s \n Comando: %s \n STDOUT: \n %s \n STDERR: %s\n " % (str(self.id), str(self.estado), str(self.comando), str(self.std_out), str(self.std_err))
+        return u"ID: %s Estado: %s \n Comando: %s \n" % (str(self.id), str(self.estado), str(self.comando))
 
 
 class BFCounter(models.Model):
@@ -236,7 +247,64 @@ class DSK(models.Model):
     def __unicode__(self):
         return u"Alineamiento y estimación \n %s" % self.name
 
-class DSK(models.Model):
+class Jellyfish(models.Model):
+
+    """"
+    Run example
+    type=1 -> Single end
+    type=2 -> Paired end
+    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
+    m.save()
+    """
+    name = models.TextField(default="Experimento")
+    procesos = models.ManyToManyField(Proceso)
+    contador = models.IntegerField(choices=CONTADORES, default=0)
+    profile = models.ForeignKey(Profile)
+    m = models.IntegerField()
+    minAb = models.BigIntegerField()
+    maxAb = models.BigIntegerField()
+    canonical = models.BooleanField(default=True)
+    out_file = models.ForeignKey(File, null=True)
+
+    def run_this(self, file="", m="", minAb="", maxAb="", canonical=""):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        tmp_dir = "/tmp/Jellyfish%s" % randint(1, 1000000)
+        # Pendiente: Crear el comando y ejecutar pruebas
+        comando_part1 = "jellyfish count -t %s -m %s -s 100000 -L %s -U %s -C -o %s %s" % (settings.CORES, m, minAb, maxAb, tmp_dir, file)
+        comando_part2 = "jellyfish dump -c -o %s_final %s" % (tmp_dir, tmp_dir)
+        comando = "%s && %s" % (comando_part1, comando_part2) 
+        #comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl --thread_count %s  --output_dir %s  --transcripts %s --left %s --right %s --seqType fq --est_method RSEM --aln_method bowtie --prep_reference" % (settings.CORES, tmp_dir, reference, " ".join(reads_1), " ".join(reads_2))
+        print "comando: %s" % (comando)
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="Jellyfish")
+        p1.save()
+        self.procesos.add(p1)
+        # To get files with path trin.fileUpload.path
+        # Genero indice y espero hasta que este listo
+        t1 = threading.Thread(target=p1.run_process)
+        t1.setDaemon(True)
+        t1.start()
+        while t1.isAlive():
+            sleep(1)
+        file_name = "%s_final" % tmp_dir
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
+        out_file.save()
+        self.out_file = out_file
+        p1.resultado = out_file
+        p1.save()
+
+    def run(self, file="", m="", minAb="", maxAb="", canonical=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, m=m, minAb=minAb, maxAb=maxAb, canonical=""))
+        t.setDaemon(True)
+        t.start()
+
+    class Meta:
+        verbose_name_plural = "Procesos de alinear y estimar abundancia"
+
+    def __unicode__(self):
+        return u"Alineamiento y estimación \n %s" % self.name
+
+class KAnalyze(models.Model):
 
     """"
     Run example
@@ -250,22 +318,19 @@ class DSK(models.Model):
     contador = models.IntegerField(choices=CONTADORES, default=0)
     profile = models.ForeignKey(Profile)
     k = models.IntegerField()
-    minAb = models.BigIntegerField()
-    maxAb = models.BigIntegerField()
-    canonical = models.BooleanField(default=True)
+    formato = models.IntegerField(choices=FORMATO, default=0)
+    reverse = models.IntegerField(choices=REVERSE, default=0)
     out_file = models.ForeignKey(File, null=True)
 
-    def run_this(self, file="", k="", minAb="", maxAb="", canonical=""):
+    def run_this(self, file="", k="", formato="", reverse=""):
         self.name = "Experimento %s" % self.id
         self.save()
-        tmp_dir = "/tmp/Jellyfish%s" % randint(1, 1000000)
+        tmp_dir = "/tmp/KAnalyze%s" % randint(1, 1000000)
         # Pendiente: Crear el comando y ejecutar pruebas
-        comando_part1 = "dsk -nb-cores %s -kmer-size %s -abundance-min %s -abundance-max %s -file %s -out /tmp/%s" % (settings.CORES, k, minAb, maxAb, file, tmp_dir)
-        comando_part2 = "dsk2ascii -file /tmp/%s.h5 -out /tmp/%s_final" % (tmp_dir, tmp_dir)
-        comando = "%s && %s" % (comando_part1, comando_part2) 
+        comando = "kanalyze -d %s -k %s -o %s -f %s -r%s %s" % (settings.CORES, k, tmp_dir, FORMATO[int(self.formato)][1], REVERSE[int(self.reverse)][1], file)
         #comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl --thread_count %s  --output_dir %s  --transcripts %s --left %s --right %s --seqType fq --est_method RSEM --aln_method bowtie --prep_reference" % (settings.CORES, tmp_dir, reference, " ".join(reads_1), " ".join(reads_2))
         print "comando: %s" % (comando)
-        p1 = Proceso(comando=str(comando), profile=self.profile, contador="DSK")
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="KAnalyze")
         p1.save()
         self.procesos.add(p1)
         # To get files with path trin.fileUpload.path
@@ -275,15 +340,15 @@ class DSK(models.Model):
         t1.start()
         while t1.isAlive():
             sleep(1)
-        file_name = "/tmp/%s_final" % tmp_dir
+        file_name = "%s" % tmp_dir
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file
         p1.resultado = out_file
         p1.save()
 
-    def run(self, file="", k="", minAb="", maxAb=""):
-        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, minAb=minAb, maxAb=maxAb, canonical=""))
+    def run(self, file="", k="", formato="", reverse=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, formato=formato, reverse=reverse))
         t.setDaemon(True)
         t.start()
 

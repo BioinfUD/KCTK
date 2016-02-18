@@ -1,39 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-        <h1>
-            KAnalyze
-        </h1>
-        <p style="text-align: justify;">
-            Descripción.....
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-        <hr>
-        <div class="row" style="text-align:center;">
-            <div class="col-sm-3"></div>
-            <div class="col-sm-6">
-                <form id='form' action="/run/bfcounter/" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="id_file">Archivo de kmers:</label>
-                        <select class="form-control" id="id_file" name="reference"  required>
-                            <option value="">seleccione un archivo</option>
-                            {% for f in fileList %}
-                                <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
-                            {% endfor %}
-                        </select><br>
-                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
-                        <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
-                        <label for="id_numKmers" data-toggle="tooltip" title="max: 63">Cantidad estimada de kmers:</label>
-                        <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
-                    </div>
-                    <input type='hidden' name='mapping' id='id_mapping' value='1'>
-                    <input type='hidden' name='type' id='id_type' value='2'>
-                    <button type="submit" class="btn btn-default">Enviar</button>
-                </form>
-            </div>
-            <div class="col-sm-3"></div>
-        </div>
-            
-        </div>
+<h1>
+    KAnalyze
+</h1>
+<p style="text-align: justify;">
+    Este algoritmo divide las secuencias en subconjuntos para cagarlos a memoria por partes pequeñas, lo cual permite un consumo mucho menor de memoria. Este método se divide en dos pasos: división (Split) y unión (Merge). El primer paso se encarga de tomar los kmers y los carga en memoria (en un array) hasta que esté llena, luego el array es ordenado, se cuentan los kmers y se escriben en disco. El segundo paso lee los archivos de conteo y los carga a memoria con un buffer para no ocupar toda la memoria disponible y los va uniendo en el archivo final de conteo, el cual queda ordenado y en disco.
+</p>
+<a href="https://sourceforge.net/p/kanalyze/code/ci/master/tree/" target="_blank">Código Fuente</a>
+<hr>
+<div class="row" style="text-align:center;">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <form id='form' action="/run/kanalyze/" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_file">Archivo de kmers:</label>
+                <select class="form-control" id="id_file" name="file" required>
+                    <option value="">seleccione un archivo</option>
+                    {% for f in fileList %}
+                        <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
+                    {% endfor %}
+                </select><br>
 
+                <label for="id_formato">Formato de entrada:</label>
+                <select class="form-control" id="id_formato" name="formato" required>
+                    <option value="">seleccione un archivo</option>
+                    <option value='0'>Raw</option>
+                    <option value='1'>Fasta</option>
+                    <option value='2'>Fastq</option>
+                    <option value='3'>Fastagz</option>
+                    <option value='4'>Fastqgz</option>
+                </select><br>
+
+                <label for="id_k" data-toggle="tooltip" title="max: 31">Tamaño de los kmers (k):</label>
+                <input type="number" class="form-control" name="k" id="id_k" min="1" max="31" ><br>
+
+                <label for="id_reverse">Complemento inverso:</label>
+                <select class="form-control" id="id_reverse" name="reverse" required>
+                    <option value="">seleccione un archivo</option>
+                    <option value='0'>Duplicate</option>
+                    <option value='1'>Single</option>
+                    <option value='2'>Canonical</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-default">Enviar</button>
+        </form>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
 {% endblock %}

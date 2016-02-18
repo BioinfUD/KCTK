@@ -11,20 +11,25 @@
 <div class="row" style="text-align:center;">
     <div class="col-sm-3"></div>
     <div class="col-sm-6">
-        <form id='form' action="/run/bfcounter/" method="post">
+        <form id='form' action="/run/jellyfish/" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_file">Archivo de kmers:</label>
-                <select class="form-control" id="id_file" name="reference"  required>
+                <select class="form-control" id="id_file" name="file"  required>
                     <option value="">seleccione un archivo</option>
                     {% for f in fileList %}
                         <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                     {% endfor %}
                 </select><br>
-                <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
-                <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
-                <label for="id_numKmers" data-toggle="tooltip" title="max: 63">Cantidad estimada de kmers:</label>
-                <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
+                <label for="id_m" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
+                <input type="number" class="form-control" name="m" id="id_m" min="1" max="63" ><br>
+                <label for="id_minAb">Abundancia mínima:</label>
+                <input type="number" class="form-control" name="minAb" id="id_minAb" min="1" max="2147483647"><br>
+                <label for="id_maxAb">Abundancia máxima:</label>
+                <input type="number" class="form-control" name="maxAb" id="id_MaxAb" min="1" max="9223372036854775807"><br>
+                <label data-toggle="tooltip" title="max: 63">Conteo de forma canonica:</label>
+                <label class="radio-inline"><input type="radio" name="canonical">Si</label>
+                <label class="radio-inline"><input type="radio" name="canonical">No</label>
             </div>
             <input type='hidden' name='mapping' id='id_mapping' value='1'>
             <input type='hidden' name='type' id='id_type' value='2'>

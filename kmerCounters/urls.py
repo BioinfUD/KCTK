@@ -37,6 +37,8 @@ urlpatterns = patterns('processing.views',
     url(r'^run/bfcounter/$', 'run_bfcounter'),
     url(r'^run/dsk/$', 'run_dsk'),
     url(r'^run/jellyfish/$', 'run_jellyfish'),
+    url(r'^run/kanalyze/$', 'run_kanalyze'),
+    
     # Admin admin
     url(r'^admin/', include(admin.site.urls)),
 )
