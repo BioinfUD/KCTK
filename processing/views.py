@@ -246,31 +246,27 @@ def download_file(request, id_file):
     print file_path
     return response
 
-
+########## RUN KMER COUNTERS TOOLS ################
 @login_required(login_url='/login/')
 def run_bfcounter(request):
-    #REFERENCE FILE PATH
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
-    #CONFIG
     k = request.POST.get('k', '')
     numKmers = request.POST.get('numKmers', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
     bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
     bf.save()
     bf.run(file=file_path, k=k, numKmers=numKmers)
-    #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+
 @login_required(login_url='/login/')
 def run_dsk(request):
-    #REFERENCE FILE PATH
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
-    #CONFIG
     k = request.POST.get('k', '')
     minAb = request.POST.get('minAb', '')
     maxAb = request.POST.get('maxAb', '')
@@ -278,18 +274,16 @@ def run_dsk(request):
     dsk = DSK(contador=1, k=k, minAb=minAb, maxAb=maxAb, profile=profile)
     dsk.save()
     dsk.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb)
-    #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+
 @login_required(login_url='/login/')
 def run_jellyfish(request):
-    #REFERENCE FILE PATH
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
-    #CONFIG
     m = request.POST.get('m', '')
     minAb = request.POST.get('minAb', '')
     maxAb = request.POST.get('maxAb', '')
@@ -304,34 +298,28 @@ def run_jellyfish(request):
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+
 @login_required(login_url='/login/')
 def run_kanalyze(request):
-    #REFERENCE FILE PATH
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
-    #CONFIG
     k = request.POST.get('k', '')
     formato = request.POST.get('formato', '')
     reverse = request.POST.get('reverse', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
     klyze = KAnalyze(contador=1, k=k, formato=formato, reverse=reverse, profile=profile)
     klyze.save()
-    #bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
-    #bf.save()
-
     klyze.run(file=file_path, k=k, formato=formato, reverse=reverse)
-    #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+
 @login_required(login_url='/login/')
 def run_kmc2(request):
-    #REFERENCE FILE PATH
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
-    #CONFIG
     k = request.POST.get('k', '')
     formato = request.POST.get('formato', '')
     minAb = request.POST.get('minAb', '')
@@ -339,122 +327,40 @@ def run_kmc2(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
     kmc2 = KMC2(contador=1, k=k, formato=formato, minAb=minAb, maxAb=maxAb, profile=profile)
     kmc2.save()
-    
     kmc2.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb, formato=formato)
-    #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+
 @login_required(login_url='/login/')
-def run_turtle(request):
-    #REFERENCE FILE PATH
+def run_tallymer(request):
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
-    #CONFIG
+    k = request.POST.get('k', '')
+    minAb = request.POST.get('minAb', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    tall = Tallymer(contador=1, k=k, minAb=minAb, profile=profile)
+    tall.save()
+    tall.run(file=file_path, k=k, minAb=minAb)
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+
+
+@login_required(login_url='/login/')
+def run_turtle(request):
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
     k = request.POST.get('k', '')
     formato = request.POST.get('formato', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
     turtle = Turtle(contador=1, k=k, formato=formato, profile=profile)
     turtle.save()
-    
     turtle.run(file=file_path, k=k, formato=formato)
-    #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
-
-@login_required(login_url='/login/')
-def run_ab2matrix(request):
-    #Result FILE PATH
-    result_paths = []
-    result_id = request.POST.getlist('result', '')
-    for r in result_id:
-        result_paths.append(File.objects.get(id=int(r)).fileUpload.path)
-    #CONFIG
-    profile = User.objects.select_related().get(id=request.user.pk).profile
-
-    ab = Abundance_to_Matrix(profile=profile)
-    ab.save()
-    ab.run(files=result_paths)
-    success = 'El proceso se ha puesto en la cola de espera.'
-    return render(request, 'success.html', {'success': success})
-
-@login_required(login_url='/login/')
-def run_expdiff(request):
-    #Result FILE PATH
-    matrix_id = request.POST.get('matrix', '')
-    matrix_path = File.objects.get(id=int(matrix_id)).fileUpload.path
-    #CONFIG
-    profile = User.objects.select_related().get(id=request.user.pk).profile
-
-    d = Differential_Expression(profile=profile)
-    d.save()
-    d.run(matrix=matrix_path)
-    success = 'El proceso se ha puesto en la cola de espera.'
-    return render(request, 'success.html', {'success': success})
-
-@login_required(login_url='/login/')
-def mapping(request):
-    #REFERENCE FILE PATH
-    reference_id = request.POST.get('reference', '')
-    reference_path = File.objects.get(id=int(reference_id)).fileUpload.path
-    #CONFIG
-    type_id = request.POST.get('type', '')
-    mapping_id = request.POST.get('mapping', '')
-    profile = User.objects.select_related().get(id=request.user.pk).profile
-
-    reads_se = []
-    reads_1 = []
-    reads_2 = []
-
-    if mapping_id == '0':
-        #BWA
-        if type_id == '1':
-            #SINGLE
-            reads_id = request.POST.getlist('reads', '')
-            for r in reads_id:
-                reads_se.append(File.objects.get(id=int(r)).fileUpload.path)
-            #print reads_se
-            m = Mapeo(mapeador=0, tipo=0, profile=profile)
-            m.save()
-        else:
-            #PAIRED
-            #RIGHT READS FILE PATH
-            rreads_id = request.POST.getlist('rreads', '')
-            for rr in rreads_id:
-                reads_1.append(File.objects.get(id=int(rr)).fileUpload.path)
-            #LEFT READS FILE PATH
-            lreads_id = request.POST.getlist('lreads', '')
-            for lr in rreads_id:
-                reads_2.append(File.objects.get(id=int(lr)).fileUpload.path)
-            m = Mapeo(mapeador=0, tipo=1, profile=profile)
-            m.save()
-    else:
-        #BOWTIE
-        if type_id == '1':
-            #SINGLE
-            reads_id = request.POST.getlist('reads', '')
-            for r in reads_id:
-                reads_se.append(File.objects.get(id=int(r)).fileUpload.path)
-            #print reads_se
-            m = Mapeo(mapeador=1, tipo=0, profile=profile)
-            m.save()
-        else:
-            #PAIRED
-            #RIGHT READS FILE PATH
-            rreads_id = request.POST.getlist('rreads', '')
-            for rr in rreads_id:
-                reads_2.append(File.objects.get(id=int(rr)).fileUpload.path)
-            #LEFT READS FILE PATH
-            lreads_id = request.POST.getlist('lreads', '')
-            for lr in lreads_id:
-                reads_1.append(File.objects.get(id=int(lr)).fileUpload.path)
-            m = Mapeo(mapeador=1, tipo=1, profile=profile)
-            m.save()
-
-    m.run(reference=reference_path, reads_1=reads_1, reads_2=reads_2, reads_se=reads_se)
-    #Falta el response
-    return response

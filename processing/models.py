@@ -378,6 +378,52 @@ class KMC2(models.Model):
         return u"Alineamiento y estimación \n %s" % self.name
 
 
+class Tallymer(models.Model):
+
+    name = models.TextField(default="Experimento")
+    procesos = models.ManyToManyField(Proceso)
+    contador = models.IntegerField(choices=CONTADORES, default=0)
+    profile = models.ForeignKey(Profile)
+    k = models.IntegerField()
+    minAb = models.BigIntegerField()
+    out_file = models.ForeignKey(File, null=True)
+
+    def run_this(self, file="", k="", minAb=""):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        tmp_dir = "Tallymer%s" % randint(1, 1000000)
+        comando_part1 = "gt suffixerator -dna -pl -tis -suf -lcp -v -parts 4 -db %s -indexname /tmp/%s" % (file, tmp_dir)
+        comando_part2 = "gt tallymer mkindex -mersize %s -minocc %s -indexname /tmp/tyr-%s -counts -pl -esa /tmp/%s" % (k, minAb, tmp_dir, tmp_dir)
+        comando_part3 = "gt tallymer search -tyr /tmp/tyr-%s -output sequence counts -q %s > /tmp/%s_final" % (tmp_dir, file, tmp_dir)
+        comando = "%s && %s && %s" % (comando_part1, comando_part2, comando_part3) 
+        print "comando: %s" % (comando)
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="KMC2")
+        p1.save()
+        self.procesos.add(p1)
+        t1 = threading.Thread(target=p1.run_process)
+        t1.setDaemon(True)
+        t1.start()
+        while t1.isAlive():
+            sleep(1)
+        file_name = "/tmp/%s_final" % tmp_dir
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
+        out_file.save()
+        self.out_file = out_file
+        p1.resultado = out_file
+        p1.save()
+
+    def run(self, file="", k="", minAb=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, minAb=minAb))
+        t.setDaemon(True)
+        t.start()
+
+    class Meta:
+        verbose_name_plural = "Procesos de alinear y estimar abundancia"
+
+    def __unicode__(self):
+        return u"Alineamiento y estimación \n %s" % self.name
+
+
 class Turtle(models.Model):
 
     name = models.TextField(default="Experimento")
