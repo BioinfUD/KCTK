@@ -12,6 +12,7 @@ from django.core.files import File as Django_File
 from django.conf import settings
 from random import randint
 import os
+import csv
 
 # Opciones estáticas
 POSIBLES_ESTADOS_PROCESOS = (
@@ -81,7 +82,12 @@ class File(models.Model):
     def get_contenido(self):
         # falta/pendiente cambiar direccion
         return Django_File(open("/home/nazkter/Develop/KmerCountersToolKit%s"%(self.fileUpload.url))).read()
-        
+
+    def get_kmer_dict(self):
+        with open("/home/nazkter/Develop/KmerCountersToolKit%s"%(self.fileUpload.url)) as file_object:
+            d = list(csv.reader(file_object, delimiter="\t", dialect=csv.excel))
+            for p in d: print p[0]
+        return d
     def __unicode__(self):
         return u"ARCHIVO \n Location: %s \n Description: %s " % (self.fileUpload.path, self.description)
 
@@ -106,6 +112,9 @@ class Proceso(models.Model):
 
     def get_resultado(self):
         return self.resultado.get_contenido()
+
+    def get_kmer_dict(self):
+        return self.resultado.get_kmer_dict()
 
     def run_process(self):
         self.estado = 2
@@ -397,7 +406,7 @@ class Tallymer(models.Model):
         comando_part3 = "gt tallymer search -tyr /tmp/tyr-%s -output sequence counts -q %s > /tmp/%s_final" % (tmp_dir, file, tmp_dir)
         comando = "%s && %s && %s" % (comando_part1, comando_part2, comando_part3) 
         print "comando: %s" % (comando)
-        p1 = Proceso(comando=str(comando), profile=self.profile, contador="KMC2")
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="Tallymer")
         p1.save()
         self.procesos.add(p1)
         t1 = threading.Thread(target=p1.run_process)

@@ -39,8 +39,59 @@
     		{% endif %}</pre>
 		</div>
 		<div id="grafica" class="tab-pane fade">
-			<h3>HighCharts / PyCharts / Plotly</h3>
-			<p>Espacio reservado para una super grafica</p>
+			<h3>HighCharts / PyCharts / Plotly ?????</h3>
+			<div id="container" style="min-width: 60%; height: 400px; margin: 0 auto;"></div>
+			<script type="text/javascript">
+				$(function () {
+				    $('#container').highcharts({
+				        title: {
+				            text: 'Histograma de frecuencia de kmers',
+				            x: -20 //center
+				        },
+				        /*subtitle: {
+				            text: 'Source: WorldClimate.com',
+				            x: -20
+				        },*/
+				        chart: {
+				        	zoomType: 'x'
+				        },
+				        xAxis: {
+				            categories: [
+				            	{% for key, value in p.get_kmer_dict %}
+				            		'{{key}}',
+				            	{% endfor %}
+				            	]
+				        },
+				        yAxis: {
+				            title: {
+				                text: 'Repeticiones'
+				            },
+				            plotLines: [{
+				                value: 0,
+				                width: 1,
+				                color: '#808080'
+				            }]
+				        },
+				        tooltip: {
+				            valueSuffix: ' repeticiones'
+				        },
+				        legend: {
+				            layout: 'vertical',
+				            align: 'right',
+				            verticalAlign: 'middle',
+				            borderWidth: 0
+				        },
+				        series: [{
+				            name: 'Conteo',
+				            data: [
+				            	{% for key, value in p.get_kmer_dict %}
+				            		{{value}},
+				            	{% endfor %}
+				            	]
+				        }]
+				    });
+				});
+			</script>
 		</div>
 	</div>
 {% endblock %}
