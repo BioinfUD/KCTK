@@ -247,7 +247,6 @@ def download_file(request, id_file):
     return response
 
 
-
 @login_required(login_url='/login/')
 def run_bfcounter(request):
     #REFERENCE FILE PATH
@@ -259,7 +258,6 @@ def run_bfcounter(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
     bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
     bf.save()
-
     bf.run(file=file_path, k=k, numKmers=numKmers)
     #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
@@ -279,9 +277,6 @@ def run_dsk(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
     dsk = DSK(contador=1, k=k, minAb=minAb, maxAb=maxAb, profile=profile)
     dsk.save()
-    #bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
-    #bf.save()
-
     dsk.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb)
     #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
@@ -302,9 +297,6 @@ def run_jellyfish(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
     jfish = Jellyfish(contador=1, m=m, minAb=minAb, maxAb=maxAb, canonical=canonical, profile=profile)
     jfish.save()
-    #bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
-    #bf.save()
-
     jfish.run(file=file_path, m=m, minAb=minAb, maxAb=maxAb, canonical=canonical)
     #Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
@@ -334,6 +326,45 @@ def run_kanalyze(request):
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
+@login_required(login_url='/login/')
+def run_kmc2(request):
+    #REFERENCE FILE PATH
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
+    #CONFIG
+    k = request.POST.get('k', '')
+    formato = request.POST.get('formato', '')
+    minAb = request.POST.get('minAb', '')
+    maxAb = request.POST.get('maxAb', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    kmc2 = KMC2(contador=1, k=k, formato=formato, minAb=minAb, maxAb=maxAb, profile=profile)
+    kmc2.save()
+    
+    kmc2.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb, formato=formato)
+    #Falta el response
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+
+@login_required(login_url='/login/')
+def run_turtle(request):
+    #REFERENCE FILE PATH
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
+    #CONFIG
+    k = request.POST.get('k', '')
+    formato = request.POST.get('formato', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    turtle = Turtle(contador=1, k=k, formato=formato, profile=profile)
+    turtle.save()
+    
+    turtle.run(file=file_path, k=k, formato=formato)
+    #Falta el response
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
 
 @login_required(login_url='/login/')
 def run_ab2matrix(request):

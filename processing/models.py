@@ -140,13 +140,6 @@ class Proceso(models.Model):
 
 class BFCounter(models.Model):
 
-    """"
-    Run example
-    type=1 -> Single end
-    type=2 -> Paired end
-    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
-    m.save()
-    """
     name = models.TextField(default="Experimento")
     procesos = models.ManyToManyField(Proceso)
     contador = models.IntegerField(choices=CONTADORES, default=0)
@@ -194,13 +187,6 @@ class BFCounter(models.Model):
 
 class DSK(models.Model):
 
-    """"
-    Run example
-    type=1 -> Single end
-    type=2 -> Paired end
-    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
-    m.save()
-    """
     name = models.TextField(default="Experimento")
     procesos = models.ManyToManyField(Proceso)
     contador = models.IntegerField(choices=CONTADORES, default=0)
@@ -249,13 +235,6 @@ class DSK(models.Model):
 
 class Jellyfish(models.Model):
 
-    """"
-    Run example
-    type=1 -> Single end
-    type=2 -> Paired end
-    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
-    m.save()
-    """
     name = models.TextField(default="Experimento")
     procesos = models.ManyToManyField(Proceso)
     contador = models.IntegerField(choices=CONTADORES, default=0)
@@ -306,13 +285,6 @@ class Jellyfish(models.Model):
 
 class KAnalyze(models.Model):
 
-    """"
-    Run example
-    type=1 -> Single end
-    type=2 -> Paired end
-    m = Mapeo(name="Exp", mapeador=0, tipo=1, profile=p)
-    m.save()
-    """
     name = models.TextField(default="Experimento")
     procesos = models.ManyToManyField(Proceso)
     contador = models.IntegerField(choices=CONTADORES, default=0)
@@ -357,3 +329,98 @@ class KAnalyze(models.Model):
 
     def __unicode__(self):
         return u"Alineamiento y estimación \n %s" % self.name
+
+
+class KMC2(models.Model):
+
+    name = models.TextField(default="Experimento")
+    procesos = models.ManyToManyField(Proceso)
+    contador = models.IntegerField(choices=CONTADORES, default=0)
+    profile = models.ForeignKey(Profile)
+    k = models.IntegerField()
+    minAb = models.BigIntegerField()
+    maxAb = models.BigIntegerField()
+    formato = models.TextField(default="q")
+    out_file = models.ForeignKey(File, null=True)
+
+    def run_this(self, file="", k="", minAb="", maxAb="", formato=""):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        tmp_dir = "/tmp/KMC2%s" % randint(1, 1000000)
+        comando_part1 = "kmc -k%s -ci%s -cx%s -m%s -f%s %s %s /tmp/" % (k, minAb, maxAb, settings.RAM, formato, file, tmp_dir)
+        comando_part2 = "kmc_tools dump %s %s_final" % (tmp_dir, tmp_dir)
+        comando = "%s && %s" % (comando_part1, comando_part2) 
+        print "comando: %s" % (comando)
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="KMC2")
+        p1.save()
+        self.procesos.add(p1)
+        t1 = threading.Thread(target=p1.run_process)
+        t1.setDaemon(True)
+        t1.start()
+        while t1.isAlive():
+            sleep(1)
+        file_name = "%s_final" % tmp_dir
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
+        out_file.save()
+        self.out_file = out_file
+        p1.resultado = out_file
+        p1.save()
+
+    def run(self, file="", k="", minAb="", maxAb="", formato=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, minAb=minAb, maxAb=maxAb, formato=formato))
+        t.setDaemon(True)
+        t.start()
+
+    class Meta:
+        verbose_name_plural = "Procesos de alinear y estimar abundancia"
+
+    def __unicode__(self):
+        return u"Alineamiento y estimación \n %s" % self.name
+
+
+class Turtle(models.Model):
+
+    name = models.TextField(default="Experimento")
+    procesos = models.ManyToManyField(Proceso)
+    contador = models.IntegerField(choices=CONTADORES, default=0)
+    profile = models.ForeignKey(Profile)
+    k = models.IntegerField()
+    formato = models.TextField(default="fastq")
+    out_file = models.ForeignKey(File, null=True)
+
+    def run_this(self, file="", k="", formato=""):
+        self.name = "Experimento %s" % self.id
+        self.save()
+        tmp_dir = "/tmp/Turtle%s" % randint(1, 1000000)
+        if formato == "fastq":
+            comando = "aTurtle64 -k %s -s %s -f %s -q %s" % (k, int(settings.RAM)/1000, file, tmp_dir)
+        else:
+            comando = "aTurtle64 -k %s -s %s -i %s -q %s" % (k, int(settings.RAM)/1000, file, tmp_dir)
+        print "comando: %s" % (comando)
+        p1 = Proceso(comando=str(comando), profile=self.profile, contador="Turtle")
+        p1.save()
+        self.procesos.add(p1)
+        t1 = threading.Thread(target=p1.run_process)
+        t1.setDaemon(True)
+        t1.start()
+        while t1.isAlive():
+            sleep(1)
+        file_name = "%s" % tmp_dir
+        out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
+        out_file.save()
+        self.out_file = out_file
+        p1.resultado = out_file
+        p1.save()
+
+    def run(self, file="", k="", formato=""):
+        t = threading.Thread(target=self.run_this, kwargs=dict(file=file, k=k, formato=formato))
+        t.setDaemon(True)
+        t.start()
+
+    class Meta:
+        verbose_name_plural = "Procesos de alinear y estimar abundancia"
+
+    def __unicode__(self):
+        return u"Alineamiento y estimación \n %s" % self.name
+
+
