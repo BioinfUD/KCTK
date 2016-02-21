@@ -86,8 +86,8 @@ class File(models.Model):
     def get_kmer_dict(self):
         with open("/home/nazkter/Develop/KmerCountersToolKit%s"%(self.fileUpload.url)) as file_object:
             d = list(csv.reader(file_object, delimiter="\t", dialect=csv.excel))
-            for p in d: print p[0]
-        return d
+        return sorted(d)
+
     def __unicode__(self):
         return u"ARCHIVO \n Location: %s \n Description: %s " % (self.fileUpload.path, self.description)
 
@@ -114,7 +114,10 @@ class Proceso(models.Model):
         return self.resultado.get_contenido()
 
     def get_kmer_dict(self):
-        return self.resultado.get_kmer_dict()
+        if "Tallymer"  == self.contador:
+            return sorted(self.resultado.get_kmer_dict(), key=lambda x: x[1])
+        else:
+            return self.resultado.get_kmer_dict()
 
     def run_process(self):
         self.estado = 2
@@ -225,6 +228,11 @@ class DSK(models.Model):
         while t1.isAlive():
             sleep(1)
         file_name = "/tmp/%s_final" % tmp_dir
+        with open(file_name, 'r+') as f:
+            text = f.read()
+            f.seek(0)
+            f.truncate()
+            f.write(text.replace(' ', '\t'))
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file
@@ -275,6 +283,11 @@ class Jellyfish(models.Model):
         while t1.isAlive():
             sleep(1)
         file_name = "%s_final" % tmp_dir
+        with open(file_name, 'r+') as f:
+            text = f.read()
+            f.seek(0)
+            f.truncate()
+            f.write(text.replace(' ', '\t'))
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file
@@ -322,6 +335,11 @@ class KAnalyze(models.Model):
         while t1.isAlive():
             sleep(1)
         file_name = "%s" % tmp_dir
+        with open(file_name, 'r+') as f:
+            text = f.read()
+            f.seek(0)
+            f.truncate()
+            f.write(text.replace(' ', '\t'))
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file
@@ -369,6 +387,11 @@ class KMC2(models.Model):
         while t1.isAlive():
             sleep(1)
         file_name = "%s_final" % tmp_dir
+        with open(file_name, 'r+') as f:
+            text = f.read()
+            f.seek(0)
+            f.truncate()
+            f.write(text.replace(' ', '\t'))
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file
@@ -415,6 +438,11 @@ class Tallymer(models.Model):
         while t1.isAlive():
             sleep(1)
         file_name = "/tmp/%s_final" % tmp_dir
+        with open(file_name, 'r+') as f:
+            text = f.read()
+            f.seek(0)
+            f.truncate()
+            f.write(text.replace(' ', '\t'))
         out_file = File(fileUpload=Django_File(open(file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
         out_file.save()
         self.out_file = out_file

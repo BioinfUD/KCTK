@@ -45,7 +45,7 @@
 				$(function () {
 				    $('#container').highcharts({
 				        title: {
-				            text: 'Histograma de frecuencia de kmers',
+				            text: 'Polígono de frecuencia de kmers',
 				            x: -20 //center
 				        },
 				        /*subtitle: {
@@ -56,11 +56,7 @@
 				        	zoomType: 'x'
 				        },
 				        xAxis: {
-				            categories: [
-				            	{% for key, value in p.get_kmer_dict %}
-				            		'{{key}}',
-				            	{% endfor %}
-				            	]
+				            categories: [{% if "Tallymer" == p.contador %}{% for key, value in p.get_kmer_dict %}'{{value}}',{% endfor %}{% else %}{% for key, value in p.get_kmer_dict %}'{{key}}',{% endfor %}{% endif %}]
 				        },
 				        yAxis: {
 				            title: {
@@ -83,11 +79,7 @@
 				        },
 				        series: [{
 				            name: 'Conteo',
-				            data: [
-				            	{% for key, value in p.get_kmer_dict %}
-				            		{{value}},
-				            	{% endfor %}
-				            	]
+				            data: [{% if "Tallymer" == p.contador %}{% for key, value in p.get_kmer_dict %}{{key}},{% endfor %}{% else %}{% for key, value in p.get_kmer_dict %}{{value}},{% endfor %}{% endif %}]
 				        }]
 				    });
 				});

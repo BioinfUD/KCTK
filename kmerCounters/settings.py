@@ -8,7 +8,7 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
 )
 
-CORES = 1   #numero de nucleos del CPU
+CORES = 4   #numero de nucleos del CPU
 RAM = 2000  #Cantidad de RAM en MB
 
 DEBUG = True
