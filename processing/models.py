@@ -108,7 +108,7 @@ class Proceso(models.Model):
         verbose_name_plural = 'Procesos'
 
     def get_estado(self):
-        return POSIBLES_ESTADOS_PROCESOS[self.estado][1]
+        return POSIBLES_ESTADOS_PROCESOS[self.estado][1] if self.estado <= 3 else "Terminado con errores"
 
     def get_resultado(self):
         return self.resultado.get_contenido()

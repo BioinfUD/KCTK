@@ -14,10 +14,10 @@
 	<div class="tab-content">
 		<div id="resultado" class="tab-pane fade in active">
 			<div class="row">
-			    <div class="col-sm-10"><h3>Resultado</h3></div>
+			    <div class="col-sm-10"><h3>Archivo de salida</h3></div>
 			    <div class="col-sm-2">
 			    	<br>
-			    	<a href="/files/upload/">
+			    	<a href="/files/{{p.resultado.id}}/">
 			    		<span class="label label-success">Descargar archivo</span>
 			    	</a>
 			    </div>
@@ -69,7 +69,8 @@
 				            }]
 				        },
 				        tooltip: {
-				            valueSuffix: ' repeticiones'
+				            valueSuffix: ' repeticiones',
+    						crosshairs: [true,true]
 				        },
 				        legend: {
 				            layout: 'vertical',
