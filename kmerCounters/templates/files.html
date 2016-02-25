@@ -6,6 +6,7 @@
 </div>
 <br><br>
 <div class="list-group">
+<h3>Archivos subidos</h3>
     {% for f in file_list %}
         <div href="#" class="list-group-item glyphicon glyphicon-file">
             <span class="" title="Description: {{f.description}}">
@@ -31,4 +32,33 @@
         </div> 
     {% endfor %}
 </div>
+<!--
+<div class="list-group">
+<h3>Resultados de procesos</h3>
+    {% for f in file_list2 %}
+        <div href="#" class="list-group-item glyphicon glyphicon-file">
+            <span class="" title="Description: {{f.description}}">
+                {{f.fileUpload.name|truncatechars:50}}
+            </span>
+            <span class="pull-right">
+                <span class="label label-success glyphicon glyphicon-edit" style="display: table-cell;">
+                    <a style="color:white" href="/files/edit/{{f.id}}">
+                    Editar
+                    </a>
+                </span>
+                <span class="label label-danger glyphicon glyphicon-remove" style="display: table-cell;">
+                    <a style="color:white" href="/files/delete/{{f.id}}">
+                    Borrar 
+                    </a>
+                </span>
+                <span class="label label-success glyphicon glyphicon-download" style="display: table-cell;">
+                    <a style="color:white" href="/files/{{f.id}}/">
+                    Descargar 
+                    </a>
+                </span>
+            </span>
+        </div> 
+    {% endfor %}
+</div>
+-->
 {% endblock %}

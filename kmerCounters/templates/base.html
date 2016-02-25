@@ -30,6 +30,9 @@
                     </li>
                     <li><a href="/login/">Acceder</a></li>
                 {% else %}
+                <span></span>
+                    <li  class="active" ><a href="#" style="cursor:default">Bienvenido, {{user.profile.firstName}}</a>  </li>
+                    <li role="separator" class="divider"></li>
                     <li><a href="/logout/">Salir</a></li>
                 {% endif %}
               </ul>

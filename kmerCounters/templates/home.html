@@ -2,18 +2,75 @@
 {% block content %}
 <!-- HOME si el usuario está logueado -->
 {% if user.is_authenticated %}
-    <h1>
-        KmerCountersToolKit (KCTK)
+    <h1 style="text-align: center;">
+       Resumen de la actividad de usuario
     </h1>
     <br>
     <p>
         <div class="row">
-            <div class="col-sm-9" style='text-align:justify'>
-                <b>Herramientas:</b> En este menú se encuentran todas las herramientas para ejecutar el conteo de kmers. Para utilizarlas, se debe hacer click en el nombre de la herramienta que desea ejecutar, luego llenar el formulario con los parametros de ejecución y finalmente hacer click en el botón llamado "Ejecutar".
-                <hr>
-                <b>Procesos:</b> En este menú se encuentran todos los procesos en ejecución o ya finalizados. Para ver una lista de los procesos haga click en el menú deseado.
-                <hr>
-                <b>Archivos:</b> En este menú se administran los archivos que se van a procesar por la herramientas de conteo. Aquí se podrá subir, eliminar y descargar los archivos deeados.
+            <div class="col-sm-12" style='text-align:justify'>
+            <div class="row">
+                <div class="col-sm-5" style="border: white solid 1px;border-radius: 4px;margin-left: 14px;">
+                    <h4>Últimos archivos subidos:</h4>  <p></p><br><br>
+                    <div class="list-group">
+                        <div href="#" class="list-group-item" style="font-weight: bold;">
+                            <span>
+                                Nombre del archivo
+                            </span>
+                            <span class="pull-right">
+                                Descargar
+                            </span>
+                        </div> 
+                    {% for f in uploadFiles %}
+                        <div href="#" class="list-group-item glyphicon glyphicon-file">
+                            <span class="" title="Description: {{f.description}}">
+                                {{f.fileUpload.name|truncatechars:50}}
+                            </span>
+                            <span class="pull-right">
+                                <span class="label label-success glyphicon glyphicon-download" style="display: table-cell;">
+                                    <a style="color:white" href="/files/{{f.id}}/">
+                                    Descargar 
+                                    </a>
+                                </span>
+                            </span>
+                        </div> 
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="col-sm-5" style="border: white solid 1px;border-radius: 4px;margin-left: 14px;">
+                    <h4>Últimos Procesos ejecutados:</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Contador</th>
+                                <th>Estado</th>
+                                <th>Ver</th>
+                            </tr>
+                        </thead>
+                    <tbody>
+                    {% for p in procesos %}
+                        <tr
+                            {% if "Terminado exitosamente" == p.get_estado %}
+                                style="background-color: #1E611E;"
+                            {% elif "Terminado con errores" == p.get_estado %}
+                                style="background-color: #6B2223;"
+                            {% endif %}
+                        >
+                            <td>{{p.pk}}</td>
+                            <td>{{p.contador}}</td>
+                            <td>{{p.get_estado}}</td>
+                            <td>{% if "Iniciado" == p.get_estado or "En espera" == p.get_estado %}
+                                {% elif "Terminado con errores" == p.get_estado %}
+                                <a href="/process/error/{{p.id}}/">Ver</a>
+                                {% else %}
+                                <a href="/process/show/{{p.id}}/">Ver</a>
+                                {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </div>
+            </div>
             </div>
         </div>
     </p>

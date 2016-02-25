@@ -24,12 +24,12 @@ def auth_view(request):
         return render(request, 'home.html')
     else:
         error = 'No se ha podido acceder, intente nuevamente'
-        return render(request, 'error.html', {'error':error})
- 
+        return render(request, 'error.html', {'error': error})
+
 
 def error_login(request):
     error = 'El ususario o la contraseña son incorrectos'
-    return render(request, 'error.html', {'error':error})
+    return render(request, 'error.html', {'error': error})
 
 
 def log_in(request):
@@ -41,7 +41,7 @@ def log_out(request):
     success = 'Ha cerrado sesión satisfactoriamente. Si desdea acceder de nuevo haga clic en el siguiente botón:'
     url_continuar = '/login'
     msg_continuar = 'Acceder a la cuenta'
-    return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 #  ############ REGISTRATION ###############
@@ -63,7 +63,7 @@ def register_user(request):
             success = 'Se ha registrado satisfactoriamente.'
             url_continuar = '/login'
             msg_continuar = 'Acceder a la cuenta'
-            return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+            return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
         else:
             error = 'Las contrasenas no son iguales'
             return render(request, 'error.html', {'error': error})
@@ -81,12 +81,13 @@ def filesubmit(request):
         user = User.objects.select_related().get(id=request.user.pk)
         p = user.profile
         ext = str(request.FILES['file']).split(".")[-1]
-        instance = File(fileUpload=request.FILES['file'], description=desc, profile=p,ext=ext,tipo=1)
+        instance = File(fileUpload=request.FILES[
+                        'file'], description=desc, profile=p, ext=ext, tipo=1)
         instance.save()
         success = 'El archivo se ha guardado satisfactoriamente.'
         url_continuar = '/files'
         msg_continuar = 'Ver lista de archivos'
-        return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+        return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
         #  except Exception as e:
         #    print e
     else:
@@ -103,10 +104,10 @@ def delete_file(request, fileID):
             success = 'Se ha eliminado el archivo satisfactoriamente.'
             url_continuar = '/files'
             msg_continuar = 'Ver lista de archivos'
-            return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+            return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
         else:
             error = 'Este archivo no le pertenece'
-            return render(request, 'error.html', {'error':error})
+            return render(request, 'error.html', {'error': error})
     except Exception, e:
         return render(request, 'error.html', {'error': e})
 
@@ -135,83 +136,97 @@ def editfile(request):
         success = 'Se ha editado el archivo satisfactoriamente.'
         url_continuar = '/files'
         msg_continuar = 'Ver lista de archivos'
-        return render(request, 'success.html',{'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+        return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
     except Exception, e:
         error = 'No se pudieron guardar los datos'
-        return render(request, 'error.html', {'error':error})
+        return render(request, 'error.html', {'error': error})
 
 
 #  ############ PAGE RENDER ###############
 def home(request):
-    return render(request, 'home.html')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    uploadFiles = File.objects.filter(profile=profile).filter(tipo=1).reverse()[:5]
+    outputFiles = File.objects.filter(profile=profile).filter(tipo=0).reverse()[:5]
+    procesos = Proceso.objects.filter(profile=profile).reverse()[:5]
+    return render(request, 'home.html', {'profile': profile, 'uploadFiles': uploadFiles, 'outputFiles': outputFiles, 'procesos': procesos})
 
 
 @login_required(login_url='/login/')
 def bfcounter_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'bfcounter.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def dsk_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'dsk.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def jellyfish_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'jellyfish.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def kanalyze_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'kanalyze.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def khmer_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'khmer.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def kmc2_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'kmc2.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def mspkmercounter_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'mspkmercounter.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def tallymer_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'tallymer.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def turtle_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile = profile).filter(tipo=1)
+    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
     return render(request, 'turtle.html', {'fileList': kmerKfiles})
+
 
 @login_required(login_url='/login/')
 def upload_success(request):
     success = 'Se ha subido el archivo satisfactoriamente.'
-    return render(request, 'success.html',{'success': success})
+    return render(request, 'success.html', {'success': success})
 
 
 @login_required(login_url='/login/')
 def show_files(request):
     user = User.objects.select_related().get(id=request.user.pk)
     profile = user.profile
-    file_list = File.objects.all().filter(profile = profile).filter(tipo = 1)
-    return render(request, 'files.html', {'file_list': file_list})
+    file_list = File.objects.all().filter(profile=profile).filter(tipo=1)
+    file_list2 = File.objects.all().filter(profile=profile).filter(tipo=0)
+    return render(request, 'files.html', {'file_list': file_list, 'file_list2': file_list2})
 
 
 @login_required(login_url='/login/')
@@ -220,6 +235,12 @@ def show_process(request):
     profile = user.profile
     processes = Proceso.objects.all().filter(profile=profile)
     return render(request, 'processes.html', {'process_list': processes})
+
+
+@login_required(login_url='/login/')
+def show_error_process(request, process_id):
+    p = Proceso.objects.get(id=process_id)
+    return render(request, 'proccess_error.html', {'p': p})
 
 
 @login_required(login_url='/login/')
@@ -241,12 +262,14 @@ def download_file(request, id_file):
     filename = file_path.split("/")[-1]
     response = HttpResponse(wrapper, content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
-    response['Content-Length'] = os.path.getsize( file_path )
-    print os.path.getsize( file_path )
+    response['Content-Length'] = os.path.getsize(file_path)
+    print os.path.getsize(file_path)
     print file_path
     return response
 
 ########## RUN KMER COUNTERS TOOLS ################
+
+
 @login_required(login_url='/login/')
 def run_bfcounter(request):
     file_id = request.POST.get('file', '')
@@ -260,7 +283,7 @@ def run_bfcounter(request):
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 @login_required(login_url='/login/')
@@ -277,7 +300,7 @@ def run_dsk(request):
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 @login_required(login_url='/login/')
@@ -289,14 +312,16 @@ def run_jellyfish(request):
     maxAb = request.POST.get('maxAb', '')
     canonical = request.POST.get('canonical', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    jfish = Jellyfish(contador=1, m=m, minAb=minAb, maxAb=maxAb, canonical=canonical, profile=profile)
+    jfish = Jellyfish(contador=1, m=m, minAb=minAb, maxAb=maxAb,
+                      canonical=canonical, profile=profile)
     jfish.save()
-    jfish.run(file=file_path, m=m, minAb=minAb, maxAb=maxAb, canonical=canonical)
-    #Falta el response
+    jfish.run(file=file_path, m=m, minAb=minAb,
+              maxAb=maxAb, canonical=canonical)
+    # Falta el response
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 @login_required(login_url='/login/')
@@ -307,13 +332,14 @@ def run_kanalyze(request):
     formato = request.POST.get('formato', '')
     reverse = request.POST.get('reverse', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    klyze = KAnalyze(contador=1, k=k, formato=formato, reverse=reverse, profile=profile)
+    klyze = KAnalyze(contador=1, k=k, formato=formato,
+                     reverse=reverse, profile=profile)
     klyze.save()
     klyze.run(file=file_path, k=k, formato=formato, reverse=reverse)
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 @login_required(login_url='/login/')
@@ -325,13 +351,14 @@ def run_kmc2(request):
     minAb = request.POST.get('minAb', '')
     maxAb = request.POST.get('maxAb', '')
     profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmc2 = KMC2(contador=1, k=k, formato=formato, minAb=minAb, maxAb=maxAb, profile=profile)
+    kmc2 = KMC2(contador=1, k=k, formato=formato,
+                minAb=minAb, maxAb=maxAb, profile=profile)
     kmc2.save()
     kmc2.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb, formato=formato)
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 @login_required(login_url='/login/')
@@ -347,7 +374,7 @@ def run_tallymer(request):
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
 
 
 @login_required(login_url='/login/')
@@ -363,4 +390,4 @@ def run_turtle(request):
     success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
-    return render(request, 'success.html', {'success': success, 'url_continuar':url_continuar, 'msg_continuar':msg_continuar})
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})

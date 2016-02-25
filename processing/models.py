@@ -81,10 +81,10 @@ class File(models.Model):
 
     def get_contenido(self):
         # falta/pendiente cambiar direccion
-        return Django_File(open("/home/nazkter/Develop/KmerCountersToolKit%s"%(self.fileUpload.url))).read()
+        return Django_File(open("%s%s"%(settings.BASE_DIR,self.fileUpload.url))).read()
 
     def get_kmer_dict(self):
-        with open("/home/nazkter/Develop/KmerCountersToolKit%s"%(self.fileUpload.url)) as file_object:
+        with open("%s%s"%(settings.BASE_DIR,self.fileUpload.url)) as file_object:
             d = list(csv.reader(file_object, delimiter="\t", dialect=csv.excel))
         return sorted(d)
 

@@ -20,7 +20,7 @@
                     {% for f in fileList %}
                         <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                     {% endfor %}
-                </select><br>
+                </select>* seleccione un archivo subido previamente<br><br>
                 <label for="id_m" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
                 <input type="number" class="form-control" name="m" id="id_m" min="1" max="63" ><br>
                 <label for="id_minAb">Abundancia mínima:</label>

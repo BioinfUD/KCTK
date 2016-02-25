@@ -30,8 +30,9 @@ urlpatterns = patterns('processing.views',
     url(r'^files/(?P<id_file>\d+)/$', 'download_file', name="download_file"),
     # Proccesses admin
     url(r'^process/show/(?P<process_id>\d+)/$', 'show_specific_process', name="show_specific_process"),
+    url(r'^process/error/(?P<process_id>\d+)/$', 'show_error_process', name="show_error_process"),
     url(r'^process/show/$', 'show_process', name='show_process'),
-    url(r'^process/$', 'show_processes'),
+    url(r'^process/$', 'show_processes'), #revisar
     url(r'^editfile/$', 'editfile'),
     # Tools execution
     url(r'^run/bfcounter/$', 'run_bfcounter'),

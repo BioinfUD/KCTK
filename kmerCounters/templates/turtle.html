@@ -4,9 +4,9 @@
             Turtle
         </h1>
         <p style="text-align: justify;">
-            Descripción.....
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Turtle: Es un método de conteo de kmers basado en un Bloom filter para detectar los kmers que se repiten más de 1 vez, de forma similar como lo hace BFCounter. La novedad de Turtle se enfoca en el uso de un método llamado sort and compress (SAC) para hacer el conteo de los kmers de forma iterativa, de tal manera que en cada iteración se carguen los kmers (ya filtrados) que quepan en la memoria disponible (o un umbral definido) para proceder a organizarlos y compactar los que sean iguales (haciendo el conteo) tanto de la iteración actual como de las anteriores; así se finaliza una iteración y se pasa a una nueva que usará la memoria liberada con la compresión para cargar otro paquete de kmers. Finalmente resulta un array con todos los kmers ordenados y contados.
         </p>
+        <a href="http://www.zbh.uni-hamburg.de/?id=211" target="_blank">Código Fuente</a>
         <hr>
         <div class="row" style="text-align:center;">
             <div class="col-sm-3"></div>
@@ -20,7 +20,7 @@
                             {% for f in fileList %}
                                 <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                             {% endfor %}
-                        </select><br>
+                        </select>* seleccione un archivo subido previamente<br><br>
                         <label for="id_formato">Formato de entrada:</label>
                         <select class="form-control" id="id_formato" name="formato" required>
                             <option value="">seleccione un archivo</option>

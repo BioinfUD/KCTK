@@ -4,9 +4,10 @@
             KMC 2
         </h1>
         <p style="text-align: justify;">
-            Descripción.....
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Este método utiliza minimizers que cumplan con ciertas características, para reducir la cantidad de éstos y solucionar algunos problemas presentes al utilizarlos (por ejemplo la gran cantidad de minimizers que contienen la cadena AA). Los minimizers seleccionados deben cumplir las siguientes reglas: no empezar con AAA, no empezar con ACA, no contener AA en ningún lado (excepto en el inicio). A los minimizers que cumplen con estas características se les llama Signatures. El procesamiento de los kmers se divide en dos fases: la distribución y el ordenado. La primera fase carga las lecturas para encontrar las regiones (super kmers) que tengan la misma Signature y guardarlas en una misma partición de disco identificada con dicha Signature. La segunda fase lee cada archivo, extrae los (k, x)-mers de los super kmers, los ordena, calcula las estadísticas para los kmers y finalmente guarda la base de datos de los kmers (en forma binaria compacta).
         </p>
+        <a href="http://sun.aei.polsl.pl/REFRESH/index.php?page=projects&project=kmc&subpage=download
+" target="_blank">Código Fuente</a>
         <hr>
         <div class="row" style="text-align:center;">
             <div class="col-sm-3"></div>
@@ -20,7 +21,7 @@
                             {% for f in fileList %}
                                 <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                             {% endfor %}
-                        </select><br>
+                        </select>* seleccione un archivo subido previamente<br><br>
                         <label for="id_formato">Formato de entrada:</label>
                         <select class="form-control" id="id_formato" name="formato" required>
                             <option value="">seleccione un archivo</option>
