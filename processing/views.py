@@ -362,6 +362,22 @@ def run_kmc2(request):
 
 
 @login_required(login_url='/login/')
+def run_mspkmercounter(request):
+    file_id = request.POST.get('file', '')
+    file_path = File.objects.get(id=int(file_id)).fileUpload.path
+    k = request.POST.get('k', '')
+    l = request.POST.get('l', '')
+    profile = User.objects.select_related().get(id=request.user.pk).profile
+    mspk = MSPKmerCounter(contador=1, k=k, l=l, profile=profile)
+    mspk.save()
+    mspk.run(file=file_path, k=k, l=l)
+    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    url_continuar = '/process/show'
+    msg_continuar = 'Ver lista de procesos'
+    return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
+
+
+@login_required(login_url='/login/')
 def run_tallymer(request):
     file_id = request.POST.get('file', '')
     file_path = File.objects.get(id=int(file_id)).fileUpload.path
