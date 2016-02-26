@@ -18,7 +18,7 @@ import csv
 POSIBLES_ESTADOS_PROCESOS = (
     (0, "Terminado exitosamente"),
     (1, "Terminado con errores"),
-    (2, "Iniciado"),
+    (2, "Ejecutandose"),
     (3, "En espera")
 )
 CONTADORES = (

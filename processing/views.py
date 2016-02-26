@@ -21,7 +21,10 @@ def auth_view(request):
     user = authenticate(username=email, password=password)
     if user is not None:
         login(request, user)
-        return render(request, 'home.html')
+        profile = User.objects.select_related().get(id=request.user.pk).profile
+        uploadFiles = File.objects.filter(profile=profile).filter(tipo=1).order_by("-id")[:5]
+        procesos = Proceso.objects.filter(profile=profile).order_by("-id")[:5]
+        return render(request, 'home.html', {'profile': profile, 'uploadFiles': uploadFiles, 'procesos': procesos})
     else:
         error = 'No se ha podido acceder, intente nuevamente'
         return render(request, 'error.html', {'error': error})
@@ -144,11 +147,13 @@ def editfile(request):
 
 #  ############ PAGE RENDER ###############
 def home(request):
-    profile = User.objects.select_related().get(id=request.user.pk).profile
-    uploadFiles = File.objects.filter(profile=profile).filter(tipo=1).reverse()[:5]
-    outputFiles = File.objects.filter(profile=profile).filter(tipo=0).reverse()[:5]
-    procesos = Proceso.objects.filter(profile=profile).reverse()[:5]
-    return render(request, 'home.html', {'profile': profile, 'uploadFiles': uploadFiles, 'outputFiles': outputFiles, 'procesos': procesos})
+    if request.user.is_authenticated():
+        profile = User.objects.select_related().get(id=request.user.pk).profile
+        uploadFiles = File.objects.filter(profile=profile).filter(tipo=1).order_by("-id")[:5]
+        procesos = Proceso.objects.filter(profile=profile).order_by("-id")[:5]
+        return render(request, 'home.html', {'profile': profile, 'uploadFiles': uploadFiles, 'procesos': procesos})
+    else:
+        return render(request, 'home.html')    
 
 
 @login_required(login_url='/login/')
@@ -233,7 +238,7 @@ def show_files(request):
 def show_process(request):
     user = User.objects.select_related().get(id=request.user.pk)
     profile = user.profile
-    processes = Proceso.objects.all().filter(profile=profile)
+    processes = Proceso.objects.all().filter(profile=profile).order_by("-id")
     return render(request, 'processes.html', {'process_list': processes})
 
 
@@ -280,7 +285,7 @@ def run_bfcounter(request):
     bf = BFCounter(contador=0, k=k, numKmers=numKmers, profile=profile)
     bf.save()
     bf.run(file=file_path, k=k, numKmers=numKmers)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón:'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -297,7 +302,7 @@ def run_dsk(request):
     dsk = DSK(contador=1, k=k, minAb=minAb, maxAb=maxAb, profile=profile)
     dsk.save()
     dsk.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -318,7 +323,7 @@ def run_jellyfish(request):
     jfish.run(file=file_path, m=m, minAb=minAb,
               maxAb=maxAb, canonical=canonical)
     # Falta el response
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -336,7 +341,7 @@ def run_kanalyze(request):
                      reverse=reverse, profile=profile)
     klyze.save()
     klyze.run(file=file_path, k=k, formato=formato, reverse=reverse)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -355,7 +360,7 @@ def run_kmc2(request):
                 minAb=minAb, maxAb=maxAb, profile=profile)
     kmc2.save()
     kmc2.run(file=file_path, k=k, minAb=minAb, maxAb=maxAb, formato=formato)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -371,7 +376,7 @@ def run_mspkmercounter(request):
     mspk = MSPKmerCounter(contador=1, k=k, l=l, profile=profile)
     mspk.save()
     mspk.run(file=file_path, k=k, l=l)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -387,7 +392,7 @@ def run_tallymer(request):
     tall = Tallymer(contador=1, k=k, minAb=minAb, profile=profile)
     tall.save()
     tall.run(file=file_path, k=k, minAb=minAb)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
@@ -403,7 +408,7 @@ def run_turtle(request):
     turtle = Turtle(contador=1, k=k, formato=formato, profile=profile)
     turtle.save()
     turtle.run(file=file_path, k=k, formato=formato)
-    success = 'El proceso se ha puesto en la cola de espera. Para ver este proceso en la lista de procesos haga clic en el siguiente botón:'
+    success = 'El proceso se ha enviado a ejecución, para ver su estado, consulte la lista de procesos por meido del boton "Procesos" del menú principal o haciendo clic en el siguiente botón::'
     url_continuar = '/process/show'
     msg_continuar = 'Ver lista de procesos'
     return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})

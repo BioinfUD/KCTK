@@ -5,10 +5,10 @@
 <hr>
 	<h2>Resultados</h2>
 	<ul class="nav nav-tabs">
-		<li class="active"><a data-toggle="tab" href="#resultado">Resultados</a></li>
+		<li class="active"><a data-toggle="tab" href="#resultado">Texto</a></li>
+		<li><a data-toggle="tab" href="#grafica">Gráfica</a></li>
 		<li><a data-toggle="tab" href="#errores">Standar Error</a></li>
 		<li><a data-toggle="tab" href="#salida">Standar Output</a></li>
-		<li><a data-toggle="tab" href="#grafica">Gráfica</a></li>
 	</ul>
 
 	<div class="tab-content">
@@ -39,7 +39,20 @@
     		{% endif %}</pre>
 		</div>
 		<div id="grafica" class="tab-pane fade">
-			<div id="container" style="min-width: 60%; height: 400px; margin: 0 auto;"></div>
+			<br><div class="alert alert-danger" role="alert">
+				El tiempo de generación de la grafica dependerá de la cantidad de datos a mostrar.
+			</div>
+			<div class="row">
+				<div class="col-sm-10">
+					<div id="container" style="min-width: 700px; height: 400px; margin: 0 auto;"></div>
+				</div>
+				<div class="col-sm-2">
+					<div class="alert alert-success" role="alert" style="padding: 5px;font-size: 12px;text-align: justify;"> 
+						<p style="font-weight: bold;">ZOOM:</p>
+						para hacer ZOOM a una region de la grafica, seleccione la zona a ampliar mediante clic sostenido.
+					</div>
+				</div>
+			</div>
 			<script type="text/javascript">
 				$(function () {
 				    $('#container').highcharts({

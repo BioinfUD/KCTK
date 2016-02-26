@@ -29,7 +29,7 @@ A continuacion se listan los procesos que ha corrido en el sistema
         <td>{{p.get_estado}}</td>
         <td>{{p.inicio}}</td>
         <td>{{p.fin}}</td>
-        <td>{% if "Iniciado" == p.get_estado or "En espera" == p.get_estado %}
+        <td>{% if "Ejecutandose" == p.get_estado or "En espera" == p.get_estado %}
             {% elif "Terminado con errores" == p.get_estado %}
             <a href="/process/error/{{p.id}}/">Ver</a>
             {% else %}
