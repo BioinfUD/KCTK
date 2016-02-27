@@ -353,13 +353,8 @@ class KAnalyze(models.Model):
         self.save()
         tmp_dir = "/tmp/KAnalyze%s" % randint(1, 1000000)
         # Pendiente: Crear el comando y ejecutar pruebas
-        comando = "kanalyze -d %s -k %s -o %s -f %s -r%s %s" % (settings.CORES, k, tmp_dir, FORMATO[
+        comando = "java -jar %s/bin/KAnalyze/kanalyze.jar count -d %s -k %s -o %s -f %s -r%s %s" % (settings.CORES, k, tmp_dir, FORMATO[
                                                                 int(self.formato)][1], REVERSE[int(self.reverse)][1], file)
-        # comando = "$TRINITY_HOME/util/align_and_estimate_abundance.pl
-        # --thread_count %s  --output_dir %s  --transcripts %s --left %s
-        # --right %s --seqType fq --est_method RSEM --aln_method bowtie
-        # --prep_reference" % (settings.CORES, tmp_dir, reference, "
-        # ".join(reads_1), " ".join(reads_2))
         print "comando: %s" % (comando)
         p1 = Proceso(comando=str(comando),
                      profile=self.profile, contador="KAnalyze")
