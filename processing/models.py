@@ -353,7 +353,7 @@ class KAnalyze(models.Model):
         self.save()
         tmp_dir = "/tmp/KAnalyze%s" % randint(1, 1000000)
         # Pendiente: Crear el comando y ejecutar pruebas
-        comando = "java -jar %s/bin/KAnalyze/kanalyze.jar count -d %s -k %s -o %s -f %s -r%s %s" % (settings.CORES, k, tmp_dir, FORMATO[
+        comando = "java -jar %s/bin/KAnalyze/kanalyze.jar count -d %s -k %s -o %s -f %s -r%s %s" % (settings.BASE_DIR,settings.CORES, k, tmp_dir, FORMATO[
                                                                 int(self.formato)][1], REVERSE[int(self.reverse)][1], file)
         print "comando: %s" % (comando)
         p1 = Proceso(comando=str(comando),
