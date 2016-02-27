@@ -39,9 +39,7 @@ urlpatterns = patterns('processing.views',
     url(r'^run/dsk/$', 'run_dsk'),
     url(r'^run/jellyfish/$', 'run_jellyfish'),
     url(r'^run/kanalyze/$', 'run_kanalyze'),
-    #url(r'^run/khmer/$', 'run_khmer'), #pendiente
     url(r'^run/kmc2/$', 'run_kmc2'),
-    url(r'^run/mspkmercounter/$', 'run_mspkmercounter'),
     url(r'^run/tallymer/$', 'run_tallymer'),
     url(r'^run/turtle/$', 'run_turtle'),
 

@@ -199,13 +199,6 @@ def kmc2_form(request):
 
 
 @login_required(login_url='/login/')
-def mspkmercounter_form(request):
-    profile = User.objects.select_related().get(id=request.user.pk).profile
-    kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)
-    return render(request, 'mspkmercounter.html', {'fileList': kmerKfiles})
-
-
-@login_required(login_url='/login/')
 def tallymer_form(request):
     profile = User.objects.select_related().get(id=request.user.pk).profile
     kmerKfiles = File.objects.all().filter(profile=profile).filter(tipo=1)

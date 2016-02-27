@@ -449,61 +449,6 @@ class KMC2(models.Model):
         return u"Alineamiento y estimación \n %s" % self.name
 
 
-class MSPKmerCounter(models.Model):
-
-    name = models.TextField(default="Experimento")
-    procesos = models.ManyToManyField(Proceso)
-    contador = models.IntegerField(choices=CONTADORES, default=0)
-    profile = models.ForeignKey(Profile)
-    k = models.IntegerField()
-    l = models.IntegerField()
-    out_file = models.ForeignKey(File, null=True)
-
-    def run_this(self, file="", k="", l=""):
-        self.name = "Experimento %s" % self.id
-        self.save()
-        tmp_dir = "/tmp/MSPKmerCounter%s" % randint(1, 1000000)
-        comando_part1 = "java -jar %s/bin/MSPKmerCounter-0.10/Partition.jar -k %s -L %s -NB 1 -t %s" % (
-            settings.BASE_DIR, k, l, settings.CORES)
-        comando_part2 = "java -jar %s/bin/MSPKmerCounter-0.10/Count64.jar -k %s -NB 1 -t %s" % (settings.BASE_DIR, k, settings.CORES)
-        comando_part3 = "java -jar %s/bin/MSPKmerCounter-0.10/Dump64.jar -k %s -NB 1 -t %s" % (settings.BASE_DIR, k, settings.CORES)
-        comando = "%s && %s && %s" % (comando_part1, comando_part2, comando_part3)
-        print "comando: %s" % (comando)
-        p1 = Proceso(comando=str(comando), profile=self.profile,
-                     contador="MSPKmerCounter")
-        p1.save()
-        self.procesos.add(p1)
-        t1 = threading.Thread(target=p1.run_process)
-        t1.setDaemon(True)
-        t1.start()
-        while t1.isAlive():
-            sleep(1)
-        file_name = "%s/CountDump/dumps0" % (settings.BASE_DIR)
-        with open(file_name, 'r+') as f:
-            text = f.read()
-            f.seek(0)
-            f.truncate()
-            f.write(text.replace(' ', '\t'))
-        out_file = File(fileUpload=Django_File(open(
-            file_name)), description="Salida " + self.name, profile=self.profile, ext="results")
-        out_file.save()
-        self.out_file = out_file
-        p1.resultado = out_file
-        p1.save()
-
-    def run(self, file="", k="", l=""):
-        t=threading.Thread(target = self.run_this,
-                           kwargs = dict(file=file, k=k, l=l))
-        t.setDaemon(True)
-        t.start()
-
-    class Meta:
-        verbose_name_plural="Procesos de alinear y estimar abundancia"
-
-    def __unicode__(self):
-        return u"Alineamiento y estimación \n %s" % self.name
-
-
 class Tallymer(models.Model):
 
     name=models.TextField(default = "Experimento")
