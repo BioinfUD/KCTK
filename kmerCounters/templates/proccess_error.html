@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Proceso terminado con errores</h1>
+<p>Este proceso fue ejecutado, pero finalizó con errores de tiempo de ejecución. Acontinuación se muestra la información pertinente del proceso y el error.</p><br>
+<h4 style="font-weight: bold;">Comando:</h4>
+	<pre>{{p.comando}}</pre>
+<hr>
+<h4 style="font-weight: bold;">Errores y advertencias</h4>
+<pre>{% if "" == p.std_err %}El comando no devolvió errores o advertencias
+{% else %}
+	{{p.std_err}}
+{% endif %}</pre>
+{% endblock %}
