@@ -76,8 +76,8 @@ class File(models.Model):
     profile = models.ForeignKey(Profile)
     ext = models.CharField(max_length=7)
     tipo = models.IntegerField(choices=TIPO, default=0)
-    test = models.BooleanField(default=None)
-    
+    test = models.BooleanField(default=False)
+
     class Meta:
         verbose_name_plural = 'Archivos'
 

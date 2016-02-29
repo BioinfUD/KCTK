@@ -62,6 +62,8 @@ def register_user(request):
                                   firstName=request.POST.get('firstName', ''),
                                   lastName=request.POST.get('lastName', ''),
                                   )
+            #Agrego los 5 archivos predeterminados al usuario
+            testFiles = File.objects.filter(test=True)
             new_profile.save()
             success = 'Se ha registrado satisfactoriamente.'
             url_continuar = '/login'
@@ -85,7 +87,7 @@ def filesubmit(request):
         p = user.profile
         ext = str(request.FILES['file']).split(".")[-1]
         instance = File(fileUpload=request.FILES[
-                        'file'], description=desc, profile=p, ext=ext, tipo=1)
+                        'file'], description=desc, profile=p, ext=ext, tipo=1, test=False)
         instance.save()
         success = 'El archivo se ha guardado satisfactoriamente.'
         url_continuar = '/files'
