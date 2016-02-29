@@ -42,7 +42,9 @@ urlpatterns = patterns('processing.views',
     url(r'^run/kmc2/$', 'run_kmc2'),
     url(r'^run/tallymer/$', 'run_tallymer'),
     url(r'^run/turtle/$', 'run_turtle'),
-
+    #HELP
+    url(r'^help/video/$', 'show_video'),
+    url(r'^help/tutorial/$', 'show_tutorial'),
     # Admin admin
     url(r'^admin/', include(admin.site.urls)),
 )

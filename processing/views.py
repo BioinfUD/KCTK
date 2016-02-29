@@ -22,7 +22,8 @@ def auth_view(request):
     if user is not None:
         login(request, user)
         profile = User.objects.select_related().get(id=request.user.pk).profile
-        uploadFiles = File.objects.filter(profile=profile).filter(tipo=1).order_by("-id")[:5]
+        uploadFiles = File.objects.filter(
+            profile=profile).filter(tipo=1).order_by("-id")[:5]
         procesos = Proceso.objects.filter(profile=profile).order_by("-id")[:5]
         return render(request, 'home.html', {'profile': profile, 'uploadFiles': uploadFiles, 'procesos': procesos})
     else:
@@ -63,11 +64,12 @@ def register_user(request):
                                   lastName=request.POST.get('lastName', ''),
                                   )
             new_profile.save()
-            #Agrego los 5 archivos predeterminados al usuario
+            # Agrego los 5 archivos predeterminados al usuario
             testFiles = File.objects.filter(test=True)
             for f in testFiles:
                 url_file = f.fileUpload.url
-                new_test_file = File(fileUpload=Django_File(open("%s%s" % (settings.BASE_DIR, url_file))), description="Archivo de Prueba", profile=new_profile, ext="results", tipo=1)
+                new_test_file = File(fileUpload=Django_File(open("%s%s" % (settings.BASE_DIR, url_file))),
+                                     description="Archivo de Prueba", profile=new_profile, ext="results", tipo=1)
                 new_test_file.save()
             success = 'Se ha registrado satisfactoriamente.'
             url_continuar = '/login'
@@ -155,11 +157,20 @@ def editfile(request):
 def home(request):
     if request.user.is_authenticated():
         profile = User.objects.select_related().get(id=request.user.pk).profile
-        uploadFiles = File.objects.filter(profile=profile).filter(tipo=1).order_by("-id")[:5]
+        uploadFiles = File.objects.filter(
+            profile=profile).filter(tipo=1).order_by("-id")[:5]
         procesos = Proceso.objects.filter(profile=profile).order_by("-id")[:5]
         return render(request, 'home.html', {'profile': profile, 'uploadFiles': uploadFiles, 'procesos': procesos})
     else:
-        return render(request, 'home.html')    
+        return render(request, 'home.html')
+
+
+def show_video(request):
+    return render(request, 'video.html')
+
+def show_tutorial(request):
+    image_data = open('%s/Manuales/ManualUsuarioKCTK.pdf' % settings.BASE_DIR, 'rb').read()
+    return HttpResponse(image_data, content_type='application/pdf')
 
 
 @login_required(login_url='/login/')
