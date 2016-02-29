@@ -67,9 +67,8 @@ def register_user(request):
             testFiles = File.objects.filter(test=True)
             for f in testFiles:
                 url_file = f.fileUpload.url
-                new_test_file = File(fileUpload=Django_File(open(
-            "%s%s" % (settings.BASE_DIR, url_file))), description="Archivo de Prueba", profile=new_profile, ext="results")
-            out_file.save()
+                new_test_file = File(fileUpload=Django_File(open("%s%s" % (settings.BASE_DIR, url_file))), description="Archivo de Prueba", profile=new_profile, ext="results")
+                new_test_file.save()
             success = 'Se ha registrado satisfactoriamente.'
             url_continuar = '/login'
             msg_continuar = 'Acceder a la cuenta'
