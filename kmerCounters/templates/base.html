@@ -44,25 +44,30 @@
     <div class="row">
         {% if user.is_authenticated %}
         <div class="col-sm-3">
-        <ul class="nav nav-pills nav-stacked">
-            <li ><a href="/">Home</a></li>
-            <li ><a href="/process/show/">Procesos</a></li>
-            <li ><a href="/files/">Archivos</a></li>
-            <li class="dropdown open">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    Herramientas <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" style="min-width: 100%;display:block;">
-                    <li><a href="/tools/bfcounter">BFCounter</a></li>
-                    <li><a href="/tools/dsk">DSK</a></li>
-                    <li><a href="/tools/jellyfish">Jellyfish</a></li>
-                    <li><a href="/tools/kanalyze">KAnalyze</a></li>
-                    <li><a href="/tools/kmc2">KMC 2</a></li> 
-                    <li><a href="/tools/tallymer">Tallymer</a></li>
-                    <li><a href="/tools/turtle">Turtle</a></li>
-                </ul>
-            </li>
-          </ul>
+            <ul class="nav nav-pills nav-stacked">
+                <li ><a href="/">Home</a></li>
+                <li ><a href="/process/show/">Procesos</a></li>
+                <li ><a href="/files/">Archivos</a></li>
+                <li class="dropdown open">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        Herramientas <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" style="min-width: 100%;display:block;">
+                        <li><a href="/tools/bfcounter">BFCounter</a></li>
+                        <li><a href="/tools/dsk">DSK</a></li>
+                        <li><a href="/tools/jellyfish">Jellyfish</a></li>
+                        <li><a href="/tools/kanalyze">KAnalyze</a></li>
+                        <li><a href="/tools/kmc2">KMC 2</a></li> 
+                        <li><a href="/tools/tallymer">Tallymer</a></li>
+                        <li><a href="/tools/turtle">Turtle</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="alert alert-success" style="bottom: 30px;position: fixed;">
+                <strong>Ayuda: </strong><br><br>
+                <a href="#">Video </a><br>
+                <a href="#">Tutorial </a><br>
+            </div>
         </div>
         {% endif %}
         {% if user.is_authenticated %}
