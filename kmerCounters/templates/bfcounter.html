@@ -21,13 +21,12 @@
                                 <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                             {% endfor %}
                         </select>* seleccione un archivo subido previamente<br><br>
-                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (k):</label>
+                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (valor entre 1 y 63):</label>
                         <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
-                        <label for="id_numKmers" data-toggle="tooltip" title="max: 63">Cantidad estimada de kmers:</label>
-                        <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807"><br>
+                        <label for="id_numKmers">Cantidad estimada de kmers:</label>
+                        <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807">
+                        <p style="text-align: justify; ">* La cantidad de kmers que se esperan sean generados a partir del archivo de lecturas, este valor será tomado como tope maximo de kmers</p><br>
                     </div>
-                    <input type='hidden' name='mapping' id='id_mapping' value='1'>
-                    <!--<input type='hidden' name='type' id='id_type' value='2'>-->
                     <button type="submit" class="btn btn-default">Enviar</button>
                 </form>
             </div>
