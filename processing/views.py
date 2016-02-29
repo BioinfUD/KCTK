@@ -62,9 +62,14 @@ def register_user(request):
                                   firstName=request.POST.get('firstName', ''),
                                   lastName=request.POST.get('lastName', ''),
                                   )
+            new_profile.save()
             #Agrego los 5 archivos predeterminados al usuario
             testFiles = File.objects.filter(test=True)
-            new_profile.save()
+            for f in testFiles:
+                url_file = f.fileUpload.url
+                new_test_file = File(fileUpload=Django_File(open(
+            "%s%s" % (settings.BASE_DIR, self.fileUpload.url))), description="Archivo de Prueba " + self.name, profile=new_profile, ext="results")
+            out_file.save()
             success = 'Se ha registrado satisfactoriamente.'
             url_continuar = '/login'
             msg_continuar = 'Acceder a la cuenta'
