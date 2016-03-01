@@ -5,13 +5,24 @@
     <h1 style="text-align: center;">
        Resumen de la actividad de usuario
     </h1>
+    <p>
+        Para hacer un conteo realice los siguientes pasos:
+        <ul>
+            <li>De clic en la herramienta deseada.</li>
+            <li>Seleccione el archivo a procesar (alguno de los de prueba o un archivo subido previamente).</li>
+            <li>Indique los parámetros de entrada y haga clic en en enviar.</li>
+            <li>Revise el estado de ejecución de su análisis en el menú "Procesos".</li>
+            <li>Cuando la ejecución haya terminado exitosamente de clic en "ver" para visualizar textual y gráficamente el resultado.</li>
+            <li>Descargue sus resultados.</li>
+        </ul>
+    </p>
     <br>
     <p>
         <div class="row">
             <div class="col-sm-12" style='text-align:justify'>
             <div class="row">
                 <div class="col-sm-5" style="border: white solid 1px;border-radius: 4px;margin-left: 14px;">
-                    <h4>Últimos archivos subidos:</h4>  <p></p><br><br>
+                    <h4>Resumen de los últimos archivos subidos por {{user.profile.firstName}}:</h4> 
                     <div class="list-group">
                         <div href="#" class="list-group-item" style="font-weight: bold;">
                             <span>
@@ -24,7 +35,7 @@
                     {% for f in uploadFiles %}
                         <div href="#" class="list-group-item glyphicon glyphicon-file">
                             <span class="" title="Description: {{f.description}}">
-                                {{f.fileUpload.name|truncatechars:50}}
+                                {{f.fileUpload.name|truncatechars:26}}
                             </span>
                             <span class="pull-right">
                                 <span class="label label-success glyphicon glyphicon-download" style="display: table-cell;">
@@ -36,9 +47,11 @@
                         </div> 
                     {% endfor %}
                     </div>
+                    * Todo usuario nuevo tendrá 3 archivos de prueba asociados automáticamente.<br>
+                    * Para ver el listado de archivos completo, vaya al menú "Archivos".
                 </div>
-                <div class="col-sm-5" style="border: white solid 1px;border-radius: 4px;margin-left: 14px;">
-                    <h4>Últimos Procesos ejecutados:</h4>
+                <div class="col-sm-6" style="border: white solid 1px;border-radius: 4px;margin-left: 14px;">
+                    <h4>Resumen de los últimos procesos ejecutados por {{user.profile.firstName}}:</h4>
                     <table class="table">
                         <thead>
                             <tr>
@@ -48,27 +61,30 @@
                                 <th>Ver</th>
                             </tr>
                         </thead>
-                    <tbody>
-                    {% for p in procesos %}
-                        <tr
-                            {% if "Terminado exitosamente" == p.get_estado %}
-                                style="background-color: #1E611E;"
-                            {% elif "Terminado con errores" == p.get_estado %}
-                                style="background-color: #6B2223;"
-                            {% endif %}
-                        >
-                            <td>{{p.pk}}</td>
-                            <td>{{p.contador}}</td>
-                            <td>{{p.get_estado}}</td>
-                            <td>{% if "Ejecutandose" == p.get_estado or "En espera" == p.get_estado %}
+                        <tbody>
+                        {% for p in procesos %}
+                            <tr
+                                {% if "Terminado exitosamente" == p.get_estado %}
+                                    style="background-color: #1E611E;"
                                 {% elif "Terminado con errores" == p.get_estado %}
-                                <a href="/process/error/{{p.id}}/">Ver</a>
-                                {% else %}
-                                <a href="/process/show/{{p.id}}/">Ver</a>
+                                    style="background-color: #6B2223;"
                                 {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
+                            >
+                                <td>{{p.pk}}</td>
+                                <td>{{p.contador}}</td>
+                                <td>{{p.get_estado}}</td>
+                                <td>{% if "Ejecutandose" == p.get_estado or "En espera" == p.get_estado %}
+                                    {% elif "Terminado con errores" == p.get_estado %}
+                                    <a href="/process/error/{{p.id}}/">Ver</a>
+                                    {% else %}
+                                    <a href="/process/show/{{p.id}}/">Ver</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div>* Para ver el listado de procesos completo, vaya al menú "Procesos".</div>
                 </div>
             </div>
             </div>

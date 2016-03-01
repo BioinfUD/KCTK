@@ -246,8 +246,8 @@ def upload_success(request):
 def show_files(request):
     user = User.objects.select_related().get(id=request.user.pk)
     profile = user.profile
-    file_list = File.objects.all().filter(profile=profile).filter(tipo=1)
-    file_list2 = File.objects.all().filter(profile=profile).filter(tipo=0)
+    file_list = File.objects.all().filter(profile=profile).filter(tipo=1).order_by("-id")
+    file_list2 = File.objects.all().filter(profile=profile).filter(tipo=0).order_by("-id")
     return render(request, 'files.html', {'file_list': file_list, 'file_list2': file_list2})
 
 

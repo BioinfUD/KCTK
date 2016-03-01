@@ -37,13 +37,15 @@
 
                 <label for="id_reverse">Complemento inverso:</label>
                 <select class="form-control" id="id_reverse" name="reverse" required>
-                    <option value="">seleccione un archivo</option>
-                    <option value='0'>Duplicate</option>
-                    <option value='1'>Single</option>
-                    <option value='2'>Canonical</option>
+                    <option value="">seleccione tipo de complemento</option>
+                    <option value='0'>Duplicado</option>
+                    <option value='1'>Sencillo</option>
+                    <option value='2'>Canónico</option>
                 </select>
                 <p style="text-align: justify; ">
-                * Single para leer en un solo sentido, Duplicate para leer en ambos sentidos, y Canonical para leer en ambos sentidos de forma canónica.
+                * <strong>Sencillo</strong>: lee los kmers en un solo sentido.<br>
+                * <strong>Duplicate</strong>: lee los kmers en ambos sentidos.<br>
+                * <strong>Canónico</strong>: lee los kmer en ambos sentidos con complemento inverso.
                 </p>
             </div>
             <button type="submit" class="btn btn-default">Enviar</button>
