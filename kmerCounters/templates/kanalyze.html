@@ -6,6 +6,8 @@
 <p style="text-align: justify;">
     Este algoritmo divide las secuencias en subconjuntos para cagarlos a memoria por partes pequeñas, lo cual permite un consumo mucho menor de memoria. Este método se divide en dos pasos: división (Split) y unión (Merge). El primer paso se encarga de tomar los kmers y los carga en memoria (en un array) hasta que esté llena, luego el array es ordenado, se cuentan los kmers y se escriben en disco. El segundo paso lee los archivos de conteo y los carga a memoria con un buffer para no ocupar toda la memoria disponible y los va uniendo en el archivo final de conteo, el cual queda ordenado y en disco.
 </p>
+
+<a href="http://bioinformatics.oxfordjournals.org/cgi/pmidlookup?view=long&pmid=24642064" target="_blank">Publicación</a><br>
 <a href="https://sourceforge.net/p/kanalyze/code/ci/master/tree/" target="_blank">Código Fuente</a>
 <hr>
 <div class="row" style="text-align:center;">
