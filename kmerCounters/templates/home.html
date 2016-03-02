@@ -3,20 +3,23 @@
 <!-- HOME si el usuario está logueado -->
 {% if user.is_authenticated %}
     <h1 style="text-align: center;">
-       Resumen de la actividad de usuario
+       Instrucciones básicas
     </h1>
-    <p>
+    <p style="text-align: justify;">
         Para hacer un conteo realice los siguientes pasos:
         <ul>
-            <li>De clic en la herramienta deseada.</li>
-            <li>Seleccione el archivo a procesar (alguno de los de prueba o un archivo subido previamente).</li>
-            <li>Indique los parámetros de entrada y haga clic en en enviar.</li>
-            <li>Revise el estado de ejecución de su análisis en el menú "Procesos".</li>
-            <li>Cuando la ejecución haya terminado exitosamente de clic en "ver" para visualizar textual y gráficamente el resultado.</li>
-            <li>Descargue sus resultados.</li>
+            <li style="text-align: justify;">De clic en la herramienta deseada.</li>
+            <li style="text-align: justify;">Seleccione el archivo a procesar (alguno de los de prueba o un archivo subido previamente).</li>
+            <li style="text-align: justify;">Indique los parámetros de entrada y haga clic en en enviar.</li>
+            <li style="text-align: justify;">Revise el estado de ejecución de su análisis en el menú "Procesos".</li>
+            <li style="text-align: justify;">Cuando la ejecución haya terminado exitosamente de clic en "ver" para visualizar textual y gráficamente el resultado.</li>
+            <li style="text-align: justify;">Descargue sus resultados.</li>
         </ul>
     </p>
     <br>
+    <!--<h1 style="text-align: center;">
+       Resumen de la actividad de usuario
+    </h1>
     <p>
         <div class="row">
             <div class="col-sm-12" style='text-align:justify'>
@@ -89,7 +92,7 @@
             </div>
             </div>
         </div>
-    </p>
+    </p>-->
     <br><br>
 <!-- HOME si el usuario NO está logueado -->
 {% else %}
