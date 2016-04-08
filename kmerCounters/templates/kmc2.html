@@ -4,7 +4,7 @@
             KMC 2
         </h1>
         <p style="text-align: justify;">
-            Este método utiliza minimizers que cumplan con ciertas características, para reducir la cantidad de éstos y solucionar algunos problemas presentes al utilizarlos (por ejemplo la gran cantidad de minimizers que contienen la cadena AA). Los minimizers seleccionados deben cumplir las siguientes reglas: no empezar con AAA, no empezar con ACA, no contener AA en ningún lado (excepto en el inicio). A los minimizers que cumplen con estas características se les llama Signatures. El procesamiento de los kmers se divide en dos fases: la distribución y el ordenado. La primera fase carga las lecturas para encontrar las regiones (super kmers) que tengan la misma Signature y guardarlas en una misma partición de disco identificada con dicha Signature. La segunda fase lee cada archivo, extrae los (k, x)-mers de los super kmers, los ordena, calcula las estadísticas para los kmers y finalmente guarda la base de datos de los kmers (en forma binaria compacta).
+            Este método utiliza minimizers que cumplan con ciertas características, para reducir la cantidad de éstos y solucionar algunos problemas presentes al utilizarlos (por ejemplo la gran cantidad de minimizers que contienen la cadena AA). Los minimizers seleccionados deben cumplir las siguientes reglas: no empezar con AAA, no empezar con ACA, no contener AA en ningún lado (excepto en el inicio). A los minimizers que cumplen con estas características se les llama Signatures. El procesamiento de los k-mers se divide en dos fases: la distribución y el ordenado. La primera fase carga las lecturas para encontrar las regiones (super k-mers) que tengan la misma Signature y guardarlas en una misma partición de disco identificada con dicha Signature. La segunda fase lee cada archivo, extrae los (k, x)-mers de los super k-mers, los ordena, calcula las estadísticas para los k-mers y finalmente guarda la base de datos de los k-mers (en forma binaria compacta).
         </p>
         <a href="http://arxiv.org/abs/1407.1507" target="_blank">Publicación</a><br>
         <a href="http://sun.aei.polsl.pl/REFRESH/index.php?page=projects&project=kmc&subpage=download" target="_blank">Código Fuente</a>
@@ -15,7 +15,7 @@
                 <form id='form' action="/run/kmc2/" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="id_file">Archivo de kmers:</label>
+                        <label for="id_file">Archivo de k-mers:</label>
                         <select class="form-control" id="id_file" name="file"  required>
                             <option value="">seleccione un archivo</option>
                             {% for f in fileList %}
@@ -28,17 +28,17 @@
                             <option value='a'>Fasta</option>
                             <option value='q'>Fastq</option>
                         </select><br>
-                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (valor entre 1 y 63):</label>
+                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los k-mers (valor entre 1 y 63):</label>
                         <input type="number" class="form-control" name="k" id="id_k" min="10" max="256" ><br>
                         <label for="id_minAb">Abundancia mínima:</label>
                         <input type="number" class="form-control" name="minAb" id="id_minAb" min="1" max="2147483647">
                         <p style="text-align: justify; ">
-                        * Mediante este campo el usuario indica que los kmers que tengan un conteo inferior a este valor deben ser eliminados.
+                        * Mediante este campo el usuario indica que los k-mers que tengan un conteo inferior a este valor deben ser eliminados.
                          </p>
                         <label for="id_maxAb">Abundancia máxima:</label>
                         <input type="number" class="form-control" name="maxAb" id="id_MaxAb" min="1" max="9223372036854775807">
                         <p style="text-align: justify; ">
-                        * Mediante este campo el usuario indica que los kmers que tengan un conteo supeior a este valor deben ser eliminados.
+                        * Mediante este campo el usuario indica que los k-mers que tengan un conteo supeior a este valor deben ser eliminados.
                          </p>
                     </div>
                     <button type="submit" class="btn btn-default">Enviar</button>

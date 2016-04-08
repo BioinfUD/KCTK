@@ -4,7 +4,7 @@
             BFCounter
         </h1>
         <p style="text-align: justify;">
-            Método para identificar, contar y almacenar únicamente los kmers que se repiten más de una vez en un dataset de secuencias genómicas. Hace uso de la estructura de datos probabilística llamada “bloom filter” (Bloom, 1970), la cual almacena implícitamente todos los kmers observados con una gran reducción del espacio en memoria (solo se usa un arreglo: la existencia de un kmer se registra alterando algunos bits de dicho arreglo, de acuerdo a la salida de unas funciones hash). Este método cuenta con tres pasos: el primero recorre todos los kmers y utiliza el bloom filter para detectar los kmers vistos más de una vez. El segundo paso se encarga de hacer el conteo de los kmers anteriormente filtrados. Y finalmente el último paso se encarga de limpiar los posibles falsos positivos que pasaron el filtro.
+            Método para identificar, contar y almacenar únicamente los k-mers que se repiten más de una vez en un dataset de secuencias genómicas. Hace uso de la estructura de datos probabilística llamada “bloom filter” (Bloom, 1970), la cual almacena implícitamente todos los k-mers observados con una gran reducción del espacio en memoria (solo se usa un arreglo: la existencia de un k-mer se registra alterando algunos bits de dicho arreglo, de acuerdo a la salida de unas funciones hash). Este método cuenta con tres pasos: el primero recorre todos los k-mers y utiliza el bloom filter para detectar los k-mers vistos más de una vez. El segundo paso se encarga de hacer el conteo de los k-mers anteriormente filtrados. Y finalmente el último paso se encarga de limpiar los posibles falsos positivos que pasaron el filtro.
         </p>
         <a href="http://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-333" target="_blank">Publicación</a><br>
         <a href="https://github.com/pmelsted/BFCounter" target="_blank">Código Fuente</a>
@@ -15,18 +15,18 @@
                 <form id='form' action="/run/bfcounter/" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="id_file">Archivo de kmers:</label>
+                        <label for="id_file">Archivo de k-mers:</label>
                         <select class="form-control" id="id_file" name="file" required>
                             <option value="">seleccione un archivo</option>
                             {% for f in fileList %}
                             <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                             {% endfor %}
                         </select>* seleccione un archivo subido previamente<br><br>
-                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (valor entre 1 y 63):</label>
+                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los k-mers (valor entre 1 y 63):</label>
                         <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
-                        <label for="id_numKmers">Cantidad estimada de kmers:</label>
+                        <label for="id_numKmers">Cantidad estimada de k-mers:</label>
                         <input type="number" class="form-control" name="numKmers" id="id_numKmers" min="1" max="9223372036854775807">
-                        <p style="text-align: justify; ">* Mediante este valor el usuario indica el máximo número de kmers generados que se esperan. Este valor depende del tamaño del archivo de entrada y de la longitud del kmer. </p><br>
+                        <p style="text-align: justify; ">* Mediante este valor el usuario indica el máximo número de k-mers generados que se esperan. Este valor depende del tamaño del archivo de entrada y de la longitud del k-mer. </p><br>
                         <!--<p>Ej:<br>
                             para prueba_1_10k el valor sugerido es xx <br>
                             para prueba_2_5k el valor sugerido es xx <br>

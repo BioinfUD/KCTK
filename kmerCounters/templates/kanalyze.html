@@ -4,7 +4,7 @@
     KAnalyze
 </h1>
 <p style="text-align: justify;">
-    Este algoritmo divide las secuencias en subconjuntos para cagarlos a memoria por partes pequeñas, lo cual permite un consumo mucho menor de memoria. Este método se divide en dos pasos: división (Split) y unión (Merge). El primer paso se encarga de tomar los kmers y los carga en memoria (en un array) hasta que esté llena, luego el array es ordenado, se cuentan los kmers y se escriben en disco. El segundo paso lee los archivos de conteo y los carga a memoria con un buffer para no ocupar toda la memoria disponible y los va uniendo en el archivo final de conteo, el cual queda ordenado y en disco.
+    Este algoritmo divide las secuencias en subconjuntos para cagarlos a memoria por partes pequeñas, lo cual permite un consumo mucho menor de memoria. Este método se divide en dos pasos: división (Split) y unión (Merge). El primer paso se encarga de tomar los k-mers y los carga en memoria (en un array) hasta que esté llena, luego el array es ordenado, se cuentan los k-mers y se escriben en disco. El segundo paso lee los archivos de conteo y los carga a memoria con un buffer para no ocupar toda la memoria disponible y los va uniendo en el archivo final de conteo, el cual queda ordenado y en disco.
 </p>
 
 <a href="http://bioinformatics.oxfordjournals.org/cgi/pmidlookup?view=long&pmid=24642064" target="_blank">Publicación</a><br>
@@ -16,7 +16,7 @@
         <form id='form' action="/run/kanalyze/" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="id_file">Archivo de kmers:</label>
+                <label for="id_file">Archivo de k-mers:</label>
                 <select class="form-control" id="id_file" name="file" required>
                     <option value="">seleccione un archivo</option>
                     {% for f in fileList %}
@@ -34,7 +34,7 @@
                     <option value='4'>Fastqgz</option>
                 </select><br>
 
-                <label for="id_k" data-toggle="tooltip" title="max: 31">Tamaño de los kmers (valor entre 1 y 31):</label>
+                <label for="id_k" data-toggle="tooltip" title="max: 31">Tamaño de los k-mers (valor entre 1 y 31):</label>
                 <input type="number" class="form-control" name="k" id="id_k" min="1" max="31" ><br>
 
                 <label for="id_reverse">Complemento inverso:</label>
@@ -45,9 +45,9 @@
                     <option value='2'>Canónico</option>
                 </select>
                 <p style="text-align: justify; ">
-                * <strong>Sencillo</strong>: lee los kmers en un solo sentido.<br>
-                * <strong>Duplicate</strong>: lee los kmers en ambos sentidos.<br>
-                * <strong>Canónico</strong>: lee los kmer en ambos sentidos con complemento inverso.
+                * <strong>Sencillo</strong>: lee los k-mers en un solo sentido.<br>
+                * <strong>Duplicate</strong>: lee los k-mers en ambos sentidos.<br>
+                * <strong>Canónico</strong>: lee los k-mer en ambos sentidos con complemento inverso.
                 </p>
             </div>
             <button type="submit" class="btn btn-default">Enviar</button>

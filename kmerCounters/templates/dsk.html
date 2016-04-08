@@ -4,7 +4,7 @@
             DSK
         </h1>
         <p style="text-align: justify;">
-            Método para conteo de kmers que optimiza el uso de la memoria RAM por medio de la partición de lecturas en conjuntos pequeños los cuales son guardados en disco y cargados a memoria en pequeñas cantidades. Este algoritmo se divide en 3 pasos: el primero calcula el número de kmers, el número de iteraciones para recorrer los kmers y el número de particiones para guardar en disco. En el segundo paso se recorren todos los kmers y por medio de una función hash se distribuye una parte de los kmers en las particiones. El tercer paso consiste en cargar en una tabla hash los kmers de cada partición e irlos contando, ocupando en memoria únicamente una partición a la vez. Finalmente se repiten los 3 pasos hasta que se hayan insertado todos los kmers.
+            Método para conteo de k-mers que optimiza el uso de la memoria RAM por medio de la partición de lecturas en conjuntos pequeños los cuales son guardados en disco y cargados a memoria en pequeñas cantidades. Este algoritmo se divide en 3 pasos: el primero calcula el número de k-mers, el número de iteraciones para recorrer los k-mers y el número de particiones para guardar en disco. En el segundo paso se recorren todos los k-mers y por medio de una función hash se distribuye una parte de los k-mers en las particiones. El tercer paso consiste en cargar en una tabla hash los k-mers de cada partición e irlos contando, ocupando en memoria únicamente una partición a la vez. Finalmente se repiten los 3 pasos hasta que se hayan insertado todos los k-mers.
         </p>
         <a href="http://bioinformatics.oxfordjournals.org/content/29/5/652.long" target="_blank">Publicación</a><br>
         <a href="http://minia.genouest.org/dsk/" target="_blank">Código Fuente</a>
@@ -15,23 +15,23 @@
                 <form id='form' action="/run/dsk/" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="id_file">Archivo de kmers:</label>
+                        <label for="id_file">Archivo de k-mers:</label>
                         <select class="form-control" id="id_file" name="file"  required>
                             <option value="">seleccione un archivo</option>
                             {% for f in fileList %}
                                 <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                             {% endfor %}
                         </select>* seleccione un archivo subido previamente<br><br>
-                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (valor entre 1 y 63):</label>
+                        <label for="id_k" data-toggle="tooltip" title="max: 63">Tamaño de los k-mers (valor entre 1 y 63):</label>
                         <input type="number" class="form-control" name="k" id="id_k" min="1" max="63" ><br>
                         <label for="id_minAb">Abundancia mínima:</label>
                         <input type="number" class="form-control" name="minAb" id="id_minAb" min="1" max="2147483647">
                         <p style="text-align: justify; ">
-                        * Mediante este campo el usuario indica que los kmers que tengan un conteo inferior a este valor deben ser eliminados.
+                        * Mediante este campo el usuario indica que los k-mers que tengan un conteo inferior a este valor deben ser eliminados.
                          </p>
                         <label for="id_maxAb">Abundancia máxima:</label>
                         <input type="number" class="form-control" name="maxAb" id="id_MaxAb" min="1" max="9223372036854775807"><p style="text-align: justify; ">
-                        * Mediante este campo el usuario indica que los kmers que tengan un conteo superior a este valor deben ser eliminados.
+                        * Mediante este campo el usuario indica que los k-mers que tengan un conteo superior a este valor deben ser eliminados.
                          </p>
                     </div>
                     <button type="submit" class="btn btn-default">Enviar</button>

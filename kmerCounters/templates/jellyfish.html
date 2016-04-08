@@ -4,7 +4,7 @@
     Jellyfish
 </h1>
 <p style="text-align: justify;">
-    Este método hace uso de una tabla hash y un enfoque lock-free, lo cual permite el acceso y actualización de la tabla por varios hilos al mismo tiempo, con una técnica llamada lock free-queues basada en la operación compare-and-swap (CAS). El algoritmo se divide en dos pasos: el primero se encarga de buscar el kmer y obtener su llave (si ya ha sido insertado) o insertar el kmer en la tabla hash con una estrategia de reprobado si no existe previamente; en caso de que se genere una colisión, el algoritmo vuelve a intentar insertar el kmer una cantidad de veces indicada por max_reprobe. El segundo paso se encarga de aumentar la cuenta del kmer, igualmente con una operación CAS.
+    Este método hace uso de una tabla hash y un enfoque lock-free, lo cual permite el acceso y actualización de la tabla por varios hilos al mismo tiempo, con una técnica llamada lock free-queues basada en la operación compare-and-swap (CAS). El algoritmo se divide en dos pasos: el primero se encarga de buscar el k-mer y obtener su llave (si ya ha sido insertado) o insertar el k-mer en la tabla hash con una estrategia de reprobado si no existe previamente; en caso de que se genere una colisión, el algoritmo vuelve a intentar insertar el k-mer una cantidad de veces indicada por max_reprobe. El segundo paso se encarga de aumentar la cuenta del k-mer, igualmente con una operación CAS.
 </p>
 
 <a href="http://bioinformatics.oxfordjournals.org/content/27/6/764" target="_blank">Publicación</a><br>
@@ -16,24 +16,24 @@
         <form id='form' action="/run/jellyfish/" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="id_file">Archivo de kmers:</label>
+                <label for="id_file">Archivo de k-mers:</label>
                 <select class="form-control" id="id_file" name="file"  required>
                     <option value="">seleccione un archivo</option>
                     {% for f in fileList %}
                         <option value='{{f.id}}'>{{f.fileUpload.name}}</option>
                     {% endfor %}
                 </select>* seleccione un archivo subido previamente<br><br>
-                <label for="id_m" data-toggle="tooltip" title="max: 63">Tamaño de los kmers (valor entre 1 y 63):</label>
+                <label for="id_m" data-toggle="tooltip" title="max: 63">Tamaño de los k-mers (valor entre 1 y 63):</label>
                 <input type="number" class="form-control" name="m" id="id_m" min="1" max="63" ><br>
                 <label for="id_minAb">Abundancia mínima:</label>
                 <input type="number" class="form-control" name="minAb" id="id_minAb" min="1" max="2147483647">
                 <p style="text-align: justify; ">
-                * Mediante este campo el usuario indica que los kmers que tengan un conteo inferior a este valor deben ser eliminados.
+                * Mediante este campo el usuario indica que los k-mers que tengan un conteo inferior a este valor deben ser eliminados.
                  </p>
                 <label for="id_maxAb">Abundancia máxima:</label>
                 <input type="number" class="form-control" name="maxAb" id="id_MaxAb" min="1" max="9223372036854775807">
                 <p style="text-align: justify; ">
-                * Mediante este campo el usuario indica que los kmers que tengan un conteo superior a este valor deben ser eliminados.
+                * Mediante este campo el usuario indica que los k-mers que tengan un conteo superior a este valor deben ser eliminados.
                  </p>
                 <label>Conteo de forma canónica:</label>
                 <label class="radio-inline"><input type="radio" name="canonical">Si</label>
