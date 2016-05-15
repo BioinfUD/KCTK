@@ -55,26 +55,30 @@ def register_user(request):
         password1 = request.POST.get('password1', '')
         password2 = request.POST.get('password2', '')
         if password1 == password2:
-            new_user = User(username=email, email=email)
-            new_user.set_password(password1)
-            new_user.save()
-            new_profile = Profile(user=new_user,
-                                  email=email,
-                                  firstName=request.POST.get('firstName', ''),
-                                  lastName=request.POST.get('lastName', ''),
-                                  )
-            new_profile.save()
-            # Agrego los 5 archivos predeterminados al usuario
-            testFiles = File.objects.filter(test=True)
-            for f in testFiles:
-                url_file = f.fileUpload.url
-                new_test_file = File(fileUpload=Django_File(open("%s%s" % (settings.BASE_DIR, url_file))),
-                                     description="Archivo de Prueba", profile=new_profile, ext="results", tipo=1)
-                new_test_file.save()
-            success = 'Se ha registrado satisfactoriamente.'
-            url_continuar = '/login'
-            msg_continuar = 'Acceder a la cuenta'
-            return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
+            if User.objects.get(username=email):
+                error = 'El usuario ya existe'
+                return render(request, 'error.html', {'error': error})
+            else:
+                new_user = User(username=email, email=email)
+                new_user.set_password(password1)
+                new_user.save()
+                new_profile = Profile(user=new_user,
+                                      email=email,
+                                      firstName=request.POST.get('firstName', ''),
+                                      lastName=request.POST.get('lastName', ''),
+                                      )
+                new_profile.save()
+                # Agrego los 5 archivos predeterminados al usuario
+                testFiles = File.objects.filter(test=True)
+                for f in testFiles:
+                    url_file = f.fileUpload.url
+                    new_test_file = File(fileUpload=Django_File(open("%s%s" % (settings.BASE_DIR, url_file))),
+                                         description="Archivo de Prueba", profile=new_profile, ext="results", tipo=1)
+                    new_test_file.save()
+                success = 'Se ha registrado satisfactoriamente.'
+                url_continuar = '/login'
+                msg_continuar = 'Acceder a la cuenta'
+                return render(request, 'success.html', {'success': success, 'url_continuar': url_continuar, 'msg_continuar': msg_continuar})
         else:
             error = 'Las contrasenas no son iguales'
             return render(request, 'error.html', {'error': error})
